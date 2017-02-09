@@ -51,10 +51,25 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Departamentos.Add(departamento);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null &&
+                        ex.InnerException.InnerException != null &&
+                        ex.InnerException.InnerException.Message.Contains("_Index"))
+                    {
+                        ModelState.AddModelError(string.Empty, "El registro ya existe");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+                }
             }
-
             return View(departamento);
         }
 
@@ -83,8 +98,24 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(departamento).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null &&
+                        ex.InnerException.InnerException != null &&
+                        ex.InnerException.InnerException.Message.Contains("_Index"))
+                    {
+                        ModelState.AddModelError(string.Empty, "El registro ya existe");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+                }
             }
             return View(departamento);
         }
@@ -111,8 +142,25 @@ namespace ECommerce.Controllers
         {
             Departamento departamento = db.Departamentos.Find(id);
             db.Departamentos.Remove(departamento);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null &&
+                    ex.InnerException.InnerException != null &&
+                    ex.InnerException.InnerException.Message.Contains("REFERENCE"))
+                {
+                    ModelState.AddModelError(string.Empty, "El registro no se puede eliminar por que está relacionado");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty,ex.Message);
+                }
+            }
+            return View(departamento);
         }
 
         protected override void Dispose(bool disposing)

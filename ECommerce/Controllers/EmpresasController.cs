@@ -11,118 +11,137 @@ using ECommerce.Clases;
 
 namespace ECommerce.Controllers
 {
-    public class CiudadesController : Controller
+    public class EmpresasController : Controller
     {
         private ECommerceContext db = new ECommerceContext();
 
-        // GET: Ciudades
+        // GET: Empresas
         public ActionResult Index()
         {
-            var ciudads = db.Ciudads.Include(c => c.Departamento);
-            return View(ciudads.ToList());
+            var empresas = db.Empresas.Include(e => e.Ciudad).Include(e => e.Departamento);
+            return View(empresas.ToList());
         }
 
-        // GET: Ciudades/Details/5
+        // GET: Empresas/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ciudad ciudad = db.Ciudads.Find(id);
-            if (ciudad == null)
+            Empresa empresa = db.Empresas.Find(id);
+            if (empresa == null)
             {
                 return HttpNotFound();
             }
-            return View(ciudad);
+            return View(empresa);
         }
 
-        // GET: Ciudades/Create
+        // GET: Empresas/Create
         public ActionResult Create()
         {
+            ViewBag.CiudadID = new SelectList(Helper.GetCiudades(), "CiudadID", "Nombre");
             ViewBag.DepartamentoID = new SelectList(Helper.GetDepartamentos(),
                 "DepartamentoID", "Nombre");
             return View();
         }
 
-        // POST: Ciudades/Create
+        // POST: Empresas/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CiudadID,Nombre,DepartamentoID")] Ciudad ciudad)
+        public ActionResult Create(Empresa empresa)
         {
             if (ModelState.IsValid)
             {
-                db.Ciudads.Add(ciudad);
+                var pic = string.Empty;
+                var folder = "~/Content/Logos";
+                if (empresa.LogoFile != null)
+                {
+                    pic = FilesHelper.SubirImagen(empresa.LogoFile, folder);
+                    pic = string.Format("{0}/{1}",folder,pic);
+                }
+                empresa.Logo = pic;
+                db.Empresas.Add(empresa);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
+            ViewBag.CiudadID = new SelectList(Helper.GetCiudades(), "CiudadID", "Nombre");
             ViewBag.DepartamentoID = new SelectList(Helper.GetDepartamentos(),
                 "DepartamentoID", "Nombre");
-            return View(ciudad);
+            return View(empresa);
         }
 
-        // GET: Ciudades/Edit/5
+        // GET: Empresas/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ciudad ciudad = db.Ciudads.Find(id);
-            if (ciudad == null)
+            Empresa empresa = db.Empresas.Find(id);
+            if (empresa == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.CiudadID = new SelectList(Helper.GetCiudades(), "CiudadID", "Nombre");
             ViewBag.DepartamentoID = new SelectList(Helper.GetDepartamentos(),
                 "DepartamentoID", "Nombre");
-            return View(ciudad);
+            return View(empresa);
         }
 
-        // POST: Ciudades/Edit/5
+        // POST: Empresas/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CiudadID,Nombre,DepartamentoID")] Ciudad ciudad)
+        public ActionResult Edit([Bind(Include = "EmpresaID,Nombre,Telefono,Direccion,Logo,DepartamentoID,CiudadID")] Empresa empresa)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(ciudad).State = EntityState.Modified;
+                db.Entry(empresa).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.CiudadID = new SelectList(Helper.GetCiudades(), "CiudadID", "Nombre");
             ViewBag.DepartamentoID = new SelectList(Helper.GetDepartamentos(),
                 "DepartamentoID", "Nombre");
-            return View(ciudad);
+            return View(empresa);
         }
 
-        // GET: Ciudades/Delete/5
+        // GET: Empresas/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ciudad ciudad = db.Ciudads.Find(id);
-            if (ciudad == null)
+            Empresa empresa = db.Empresas.Find(id);
+            if (empresa == null)
             {
                 return HttpNotFound();
             }
-            return View(ciudad);
+            return View(empresa);
         }
 
-        // POST: Ciudades/Delete/5
+        // POST: Empresas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Ciudad ciudad = db.Ciudads.Find(id);
-            db.Ciudads.Remove(ciudad);
+            Empresa empresa = db.Empresas.Find(id);
+            db.Empresas.Remove(empresa);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public JsonResult GetCiudadesDe(int departamentoId)
+        {
+            db.Configuration.ProxyCreationEnabled = false;
+            var ciudadesDe = db.Ciudads.Where(c => c.DepartamentoID == departamentoId);
+            return Json(ciudadesDe);
         }
 
         protected override void Dispose(bool disposing)

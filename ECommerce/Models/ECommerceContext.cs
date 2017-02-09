@@ -21,5 +21,7 @@ namespace ECommerce.Models
         public DbSet<Departamento> Departamentos { get; set; }
 
         public System.Data.Entity.DbSet<ECommerce.Models.Ciudad> Ciudads { get; set; }
+
+        public System.Data.Entity.DbSet<ECommerce.Models.Empresa> Empresas { get; set; }
     }
 }
