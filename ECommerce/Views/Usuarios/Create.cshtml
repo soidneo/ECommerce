@@ -1,28 +1,41 @@
-﻿@model ECommerce.Models.Empresa
+﻿@model ECommerce.Models.Usuario
 
 @{
-    ViewBag.Title = "Editar Empresa";
+    ViewBag.Title = "Nuevo Usuario";
 }
 
-<h2>Editar Empresa</h2>
+<h2>Nuevo Usuario</h2>
 
 
-@using (Html.BeginForm("Edit", "Empresas", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Create", "Usuarios", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Empresa</h4>
+        <h4>Usuario</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.EmpresaID)
-        @Html.HiddenFor(model => model.Logo)
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Apellido, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Apellido, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Apellido, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -43,10 +56,10 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.LogoFile, "Logo", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.PhotoFile,"Foto", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <span class="btn btn-link btn-file">
-                    @Html.TextBoxFor(model => model.LogoFile, htmlAttributes: new { @type = "file" })
+                    @Html.TextBoxFor(model => model.PhotoFile, htmlAttributes: new { @type = "file" })
                 </span>
             </div>
         </div>
@@ -68,8 +81,16 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.EmpresaID, "Empresa", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("EmpresaID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.EmpresaID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Guardar" class="btn btn-warning" />
+                <input type="submit" value="Crear" class="btn btn-success" />
                 @Html.ActionLink("Volver", "Index", new { }, new { @class = "btn btn-primary" })
             </div>
         </div>
@@ -81,6 +102,7 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
         $(document).ready(function () {
+            $("#CiudadID").empty();
             $("#CiudadID").append('<option value="0">[Seleccione una ciudad...]</option>');
             $("#DepartamentoID").change(function () {
                 $("#CiudadID").empty();

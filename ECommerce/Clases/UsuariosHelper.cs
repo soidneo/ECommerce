@@ -1,0 +1,91 @@
+﻿using ECommerce.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web.Configuration;
+
+namespace ECommerce.Clases
+{
+    public class UsuariosHelper:IDisposable
+    {
+        private static ECommerceContext db = new ECommerceContext();
+        private static ApplicationDbContext usuarioContext = new ApplicationDbContext();
+
+        public static void CheckRole(string roleName)
+        {
+            var roleManager = new RoleManager<IdentityRole>(
+                new RoleStore<IdentityRole>(usuarioContext));
+            if (!roleManager.RoleExists(roleName))
+            {
+                roleManager.Create(new IdentityRole(roleName));
+            }
+        }
+
+        public static void CheckSuperUser()
+        {
+            var userManager = new UserManager<ApplicationUser>(
+                new UserStore<ApplicationUser>(usuarioContext));
+            var email = WebConfigurationManager.AppSettings["AdminUser"];
+            var password = WebConfigurationManager.AppSettings["AdminPassword"];
+            var userASP = userManager.FindByName(email);
+            if (userASP == null)
+            {
+                CreateUserAsp(email, password);
+                return;
+            }
+            userManager.AddToRole(userASP.Id, "Admin");
+        }
+
+        public static void CreateUserAsp(string email, string roleName)
+        {
+            var userManager = new UserManager<ApplicationUser>(
+                new UserStore<ApplicationUser>(usuarioContext));
+            var userASP = new ApplicationUser
+            {
+                UserName = email,
+                Email = email,
+            };
+            userManager.Create(userASP, email);
+            userManager.AddToRole(userASP.Id, roleName);
+        }
+
+        public static async Task PasswordRecovery(string email)
+        {
+            var userManager = new UserManager<ApplicationUser>(
+                new UserStore<ApplicationUser>(usuarioContext));
+            var userASP = userManager.FindByName(email);
+            if (userASP == null)
+            {
+                return;
+            }
+            var user = db.Usuarios.Where(u => u.UserName == email).FirstOrDefault();
+            if (user == null)
+            {
+                return; 
+            }
+            var random = new Random();
+            var newPassword = string.Format("{0}{1}{2:04}*",
+                user.Nombre.Trim().ToUpper().Substring(0, 1),
+                user.Apellido.Trim().ToLower(),
+                random.Next(10000));
+            userManager.RemovePassword(userASP.Id);
+            userManager.AddPassword(userASP.Id,newPassword);
+            var subject = "Recuperar su contraseña";
+            var body = string.Format(@"
+            <h1>Resetear su contraseña</h1>
+            <p>Su nueva contraseña es <strong>{0}</strong></p>
+            <p>Por favor cambiela por una nueva</p>", newPassword);
+            await MailHelper.SendMail(email, subject, body);
+        }
+        public void Dispose()
+        {
+            usuarioContext.Dispose();
+            db.Dispose();
+        }
+    }
+
+}

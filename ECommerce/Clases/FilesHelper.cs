@@ -10,23 +10,29 @@ namespace ECommerce.Clases
 {
     public class FilesHelper
     {
-        public static string SubirImagen(HttpPostedFileBase file, string folder)
+        public static bool SubirImagen(HttpPostedFileBase file, string folder, string name)
         {
-            string path = string.Empty;
-            string pic = string.Empty;
-
-            if (file!=null)
+            if (file == null || string.IsNullOrEmpty(folder) || string.IsNullOrEmpty(name))
             {
-                pic = Path.GetFileName(file.FileName);
-                path = Path.Combine(HttpContext.Current.Server.MapPath(folder), pic);
+                return false;
+            }
+            try
+            {
+                string path = string.Empty;
+                path = Path.Combine(HttpContext.Current.Server.MapPath(folder), name);
                 file.SaveAs(path);
                 using (MemoryStream ms = new MemoryStream())
                 {
                     file.InputStream.CopyTo(ms);
                     byte[] array = ms.GetBuffer();
                 }
+                return true;
             }
-            return pic;
+            catch (Exception)
+            {
+
+                return false;
+            }  
         }
     }
 }

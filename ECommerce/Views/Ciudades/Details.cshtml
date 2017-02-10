@@ -1,10 +1,10 @@
 ﻿@model ECommerce.Models.Ciudad
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalles";
 }
 
-<h2>Details</h2>
+<h2>Detalles</h2>
 
 <div>
     <h4>Ciudad</h4>
@@ -29,6 +29,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.CiudadID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Edit", "Edit", new { id = Model.CiudadID }, new { @class = "btn btn-warning" }) |
+    @Html.ActionLink("Volver", "Index", new { }, new { @class = "btn btn-primary" })
 </p>

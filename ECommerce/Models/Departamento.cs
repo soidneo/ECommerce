@@ -20,6 +20,9 @@ namespace ECommerce.Models
         public string Nombre { get; set; }
 
         public virtual ICollection <Ciudad> Ciudades { get; set; }
+
         public virtual ICollection<Empresa> Empresas { get; set; }
+
+        public virtual ICollection<Usuario> Usuarios { get; set; }
     }
 }

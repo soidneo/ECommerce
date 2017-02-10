@@ -56,7 +56,7 @@
            }
         </td>
         <td>
-            @Html.ActionLink("Editar", "Edit", new { id=item.EmpresaID }    ) 
+            @Html.ActionLink("Editar", "Edit", new { id=item.EmpresaID }, new { @class = "btn btn-warning" }) 
             @Html.ActionLink("Detalles", "Details", new { id=item.EmpresaID }, new { @class = "btn btn-info" }) 
             @Html.ActionLink("Eliminar", "Delete", new { id = item.EmpresaID }, new { @class = "btn btn-danger" });
         </td>

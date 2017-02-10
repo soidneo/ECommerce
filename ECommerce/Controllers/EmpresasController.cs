@@ -40,8 +40,8 @@ namespace ECommerce.Controllers
         // GET: Empresas/Create
         public ActionResult Create()
         {
-            ViewBag.CiudadID = new SelectList(Helper.GetCiudades(), "CiudadID", "Nombre");
-            ViewBag.DepartamentoID = new SelectList(Helper.GetDepartamentos(),
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre");
+            ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
                 "DepartamentoID", "Nombre");
             return View();
         }
@@ -55,21 +55,32 @@ namespace ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                var pic = string.Empty;
-                var folder = "~/Content/Logos";
-                if (empresa.LogoFile != null)
-                {
-                    pic = FilesHelper.SubirImagen(empresa.LogoFile, folder);
-                    pic = string.Format("{0}/{1}",folder,pic);
-                }
-                empresa.Logo = pic;
                 db.Empresas.Add(empresa);
                 db.SaveChanges();
+
+                if (empresa.LogoFile != null)
+                {
+                    var folder = "~/Content/Logos";
+                    var fileName = string.Format("{0}.jpg", empresa.EmpresaID);
+
+                    if (FilesHelper.SubirImagen(empresa.LogoFile, folder,
+                        fileName))
+                    {
+                        
+                        var pic = string.Format("{0}/{1}", folder, fileName);
+                        empresa.Logo = pic;
+                        db.Entry(empresa).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }   
+                    
+                }
+                
+                
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CiudadID = new SelectList(Helper.GetCiudades(), "CiudadID", "Nombre");
-            ViewBag.DepartamentoID = new SelectList(Helper.GetDepartamentos(),
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre");
+            ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
                 "DepartamentoID", "Nombre");
             return View(empresa);
         }
@@ -86,9 +97,9 @@ namespace ECommerce.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CiudadID = new SelectList(Helper.GetCiudades(), "CiudadID", "Nombre");
-            ViewBag.DepartamentoID = new SelectList(Helper.GetDepartamentos(),
-                "DepartamentoID", "Nombre");
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre",empresa.CiudadID);
+            ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
+                "DepartamentoID", "Nombre",empresa.DepartamentoID);
             return View(empresa);
         }
 
@@ -97,16 +108,26 @@ namespace ECommerce.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "EmpresaID,Nombre,Telefono,Direccion,Logo,DepartamentoID,CiudadID")] Empresa empresa)
+        public ActionResult Edit(Empresa empresa)
         {
             if (ModelState.IsValid)
             {
+                if (empresa.LogoFile != null)
+                {
+                    var folder = "~/Content/Logos";
+                    var fileName = string.Format("{0}.jpg", empresa.EmpresaID);
+                    if (FilesHelper.SubirImagen(empresa.LogoFile, folder, fileName))
+                    {
+                        empresa.Logo = string.Format("{0}/{1}", folder, fileName);
+                    }
+                    
+                }
                 db.Entry(empresa).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.CiudadID = new SelectList(Helper.GetCiudades(), "CiudadID", "Nombre");
-            ViewBag.DepartamentoID = new SelectList(Helper.GetDepartamentos(),
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre");
+            ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
                 "DepartamentoID", "Nombre");
             return View(empresa);
         }

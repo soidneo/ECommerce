@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Clases
 {
-    public class Helper : IDisposable
+    public class CombosHelper : IDisposable
     {
         private static ECommerceContext db = new ECommerceContext();
 
@@ -32,6 +32,16 @@ namespace ECommerce.Clases
             return ciudades.OrderBy(c => c.Nombre).ToList();
         }
 
+        public static List<Empresa> GetEmpresas()
+        {
+            var empresas = db.Empresas.ToList();
+            empresas.Add(new Empresa
+            {
+                EmpresaID = 0,
+                Nombre = "[Seleccione una empresa...]"
+            });
+            return empresas.OrderBy(e => e.Nombre).ToList();
+        }
         public void Dispose()
         {
             db.Dispose();
