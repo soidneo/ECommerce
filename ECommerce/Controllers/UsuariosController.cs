@@ -119,10 +119,18 @@ namespace ECommerce.Controllers
                     {
                         usuario.Photo = string.Format("{0}/{1}", folder, fileName);
                     }
-
+                    
+                }
+                var db2 = new ECommerceContext();
+                var currentUser = db2.Usuarios.Find(usuario.UsuarioID);
+                if (currentUser.UserName != usuario.UserName)
+                {
+                    UsuariosHelper.UpdateUserName(currentUser.UserName, usuario.UserName);
                 }
                 db.Entry(usuario).State = EntityState.Modified;
                 db.SaveChanges();
+                db2.Dispose();
+
                 return RedirectToAction("Index");
             }
             ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre", usuario.CiudadID);
@@ -138,7 +146,7 @@ namespace ECommerce.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Usuario usuario = db.Usuarios.Find(id);
+            var usuario = db.Usuarios.Find(id);
             if (usuario == null)
             {
                 return HttpNotFound();
@@ -151,9 +159,10 @@ namespace ECommerce.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Usuario usuario = db.Usuarios.Find(id);
+            var usuario = db.Usuarios.Find(id);
             db.Usuarios.Remove(usuario);
             db.SaveChanges();
+            UsuariosHelper.DeleteUser(usuario.UserName);
             return RedirectToAction("Index");
         }
 

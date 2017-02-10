@@ -25,6 +25,34 @@ namespace ECommerce.Clases
             }
         }
 
+        public static bool DeleteUser(string email)
+        {
+            var userManager = new UserManager<ApplicationUser>(
+                new UserStore<ApplicationUser>(usuarioContext));
+            var userASP = userManager.FindByEmail(email);
+            if (userASP == null)
+            {
+                return false;
+            }
+            var response = userManager.Delete(userASP);
+            return response.Succeeded;
+        }
+
+        public static bool UpdateUserName(string currentUserName, string newUserName)
+        {
+            var userManager = new UserManager<ApplicationUser>(
+                new UserStore<ApplicationUser>(usuarioContext));
+            var userASP = userManager.FindByEmail(currentUserName);
+            if (userASP == null)
+            {
+                return false;
+            }
+            userASP.UserName = newUserName;
+            userASP.Email = newUserName;
+            var response = userManager.Update(userASP);
+            return response.Succeeded;
+        }
+
         public static void CheckSuperUser()
         {
             var userManager = new UserManager<ApplicationUser>(

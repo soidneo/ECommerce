@@ -50,6 +50,8 @@ namespace ECommerce.Models
 
         public virtual ICollection<Usuario> Usuarios { get; set; }
 
+        public virtual ICollection<Categoria> Categorias { get; set; }
+
     }
 }
 

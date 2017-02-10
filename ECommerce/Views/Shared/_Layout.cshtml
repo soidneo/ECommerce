@@ -24,15 +24,27 @@
                     <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
                     <li>@Html.ActionLink("Acerca de Nosotros", "About", "Home")</li>
                     <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administración <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Empresas", "Index", "Empresas")</li>
-                            <li>@Html.ActionLink("Departamentos", "Index", "Departamentos")</li>
-                            <li>@Html.ActionLink("Ciudades", "Index", "Ciudades")</li>
-                            <li>@Html.ActionLink("Usuarios", "Index", "Usuarios")</li>
-                        </ul>
-                    </li>                    
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administración <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Empresas", "Index", "Empresas")</li>
+                                <li>@Html.ActionLink("Departamentos", "Index", "Departamentos")</li>
+                                <li>@Html.ActionLink("Ciudades", "Index", "Ciudades")</li>
+                                <li>@Html.ActionLink("Usuarios", "Index", "Usuarios")</li>
+                            </ul>
+                        </li>
+                    }
+                    @if (User.IsInRole("User"))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Operaciones <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Categorias", "Index", "Categorias")</li>
+                            </ul>
+                        </li>
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
