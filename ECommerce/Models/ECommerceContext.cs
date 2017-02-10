@@ -27,5 +27,9 @@ namespace ECommerce.Models
         public System.Data.Entity.DbSet<ECommerce.Models.Usuario> Usuarios { get; set; }
 
         public System.Data.Entity.DbSet<ECommerce.Models.Categoria> Categorias { get; set; }
+
+        public System.Data.Entity.DbSet<ECommerce.Models.Impuesto> Impuestoes { get; set; }
+
+        public System.Data.Entity.DbSet<ECommerce.Models.Producto> Productoes { get; set; }
     }
 }

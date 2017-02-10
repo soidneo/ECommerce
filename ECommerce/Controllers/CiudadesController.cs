@@ -11,12 +11,13 @@ using ECommerce.Clases;
 
 namespace ECommerce.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CiudadesController : Controller
     {
         private ECommerceContext db = new ECommerceContext();
 
         // GET: Ciudades
-        [Authorize(Roles ="Admin")]
+        
         public ActionResult Index()
         {
             var ciudads = db.Ciudads.Include(c => c.Departamento);
@@ -38,8 +39,6 @@ namespace ECommerce.Controllers
             return View(ciudad);
         }
 
-        // GET: Ciudades/Create
-        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
@@ -66,8 +65,6 @@ namespace ECommerce.Controllers
             return View(ciudad);
         }
 
-        // GET: Ciudades/Edit/5
-        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -102,8 +99,6 @@ namespace ECommerce.Controllers
             return View(ciudad);
         }
 
-        // GET: Ciudades/Delete/5
-        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)

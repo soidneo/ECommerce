@@ -11,122 +11,118 @@ using ECommerce.Models;
 namespace ECommerce.Controllers
 {
     [Authorize(Roles = "User")]
-    public class CategoriasController : Controller
+    public class ImpuestosController : Controller
     {
         private ECommerceContext db = new ECommerceContext();
-        private Usuario user;
 
-        
+        // GET: Impuestoes
         public ActionResult Index()
         {
-            user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
             if (user == null)
             {
                 return RedirectToAction("Index", "Home");
             }
-            var categorias = db.Categorias.Where(c => c.EmpresaID == user.EmpresaID);
-            return View(categorias.ToList());
+            var impuestos = db.Impuestoes.Where(t => t.EmpresaID == user.EmpresaID);
+            return View(impuestos.ToList());
         }
 
-        // GET: Categorias/Details/5
+        // GET: Impuestoes/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Categoria categoria = db.Categorias.Find(id);
-            if (categoria == null)
+            Impuesto impuesto = db.Impuestoes.Find(id);
+            if (impuesto == null)
             {
                 return HttpNotFound();
             }
-            return View(categoria);
+            return View(impuesto);
         }
 
-        // GET: Categorias/Create
+        // GET: Impuestoes/Create
         public ActionResult Create()
         {
-            user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
             if (user == null)
             {
                 return RedirectToAction("Index", "Home");
             }
-            var categoria = new Categoria { EmpresaID = user.EmpresaID, };
-            return View(categoria);
+            var impuesto = new Impuesto { EmpresaID = user.EmpresaID, };
+            return View(impuesto);  
         }
 
-        // POST: Categorias/Create
+        // POST: Impuestoes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CategoriaID,Descripcion,EmpresaID")] Categoria categoria)
+        public ActionResult Create(Impuesto impuesto)
         {
             if (ModelState.IsValid)
             {
-                db.Categorias.Add(categoria);
+                db.Impuestoes.Add(impuesto);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
-            ViewBag.EmpresaID = new SelectList(db.Empresas, "EmpresaID", "Nombre", categoria.EmpresaID);
-            return View(categoria);
+            return View(impuesto);
         }
 
-        // GET: Categorias/Edit/5
+        // GET: Impuestoes/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Categoria categoria = db.Categorias.Find(id);
-            if (categoria == null)
+            Impuesto impuesto = db.Impuestoes.Find(id);
+            if (impuesto == null)
             {
                 return HttpNotFound();
             }
-            return View(categoria);
+            return View(impuesto);
         }
 
-        // POST: Categorias/Edit/5
+        // POST: Impuestoes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CategoriaID,Descripcion,EmpresaID")] Categoria categoria)
+        public ActionResult Edit(Impuesto impuesto)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(categoria).State = EntityState.Modified;
+                db.Entry(impuesto).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.EmpresaID = new SelectList(db.Empresas, "EmpresaID", "Nombre", categoria.EmpresaID);
-            return View(categoria);
+            return View(impuesto);
         }
 
-        // GET: Categorias/Delete/5
+        // GET: Impuestoes/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Categoria categoria = db.Categorias.Find(id);
-            if (categoria == null)
+            Impuesto impuesto = db.Impuestoes.Find(id);
+            if (impuesto == null)
             {
                 return HttpNotFound();
             }
-            return View(categoria);
+            return View(impuesto);
         }
 
-        // POST: Categorias/Delete/5
+        // POST: Impuestoes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Categoria categoria = db.Categorias.Find(id);
-            db.Categorias.Remove(categoria);
+            Impuesto impuesto = db.Impuestoes.Find(id);
+            db.Impuestoes.Remove(impuesto);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
