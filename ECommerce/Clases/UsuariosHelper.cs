@@ -62,7 +62,7 @@ namespace ECommerce.Clases
             var userASP = userManager.FindByName(email);
             if (userASP == null)
             {
-                CreateUserAsp(email, password);
+                CreateUserAsp(email, "Admin");
                 return;
             }
             userManager.AddToRole(userASP.Id, "Admin");

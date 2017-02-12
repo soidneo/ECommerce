@@ -12,7 +12,7 @@ namespace ECommerce.Models
     public class Producto
     {
         [Key]
-        public int IProductoID { get; set; }
+        public int ProductoID { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [Range(1, double.MaxValue, ErrorMessage = "Debe seleccionar una empresa")]
@@ -50,16 +50,22 @@ namespace ECommerce.Models
         [DataType(DataType.ImageUrl)]
         public string Image { get; set; }
         [NotMapped]
+        [Display(Name ="Imagen")]
         public HttpPostedFileBase ImageFile { get; set; }
 
         [DataType(DataType.MultilineText)]
         public string Comentarios { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = false)]
+        public double stock { get { return Inventarios.Sum(i => i.stock)};  }
 
         public virtual Empresa Empresa { get; set; }
 
         public virtual Categoria Categoria { get; set; }
 
         public virtual Impuesto Impuesto { get; set; }
+
+        public virtual ICollection<Inventario> Inventarios { get; set; }
 
 
     }

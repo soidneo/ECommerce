@@ -182,6 +182,7 @@
     <Compile Include="Clases\MailHelper.cs" />
     <Compile Include="Clases\UsuariosHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BodegasController.cs" />
     <Compile Include="Controllers\CategoriasController.cs" />
     <Compile Include="Controllers\CiudadesController.cs" />
     <Compile Include="Controllers\DepartamentosController.cs" />
@@ -196,6 +197,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Bodega.cs" />
     <Compile Include="Models\Categoria.cs" />
     <Compile Include="Models\Ciudad.cs" />
     <Compile Include="Models\Departamento.cs" />
@@ -203,6 +205,7 @@
     <Compile Include="Models\Empresa.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Impuesto.cs" />
+    <Compile Include="Models\Inventario.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Producto.cs" />
     <Compile Include="Models\Usuario.cs" />
@@ -299,9 +302,15 @@
     <Content Include="Views\Productos\Details.cshtml" />
     <Content Include="Views\Productos\Edit.cshtml" />
     <Content Include="Views\Productos\Index.cshtml" />
+    <Content Include="Views\Bodegas\Create.cshtml" />
+    <Content Include="Views\Bodegas\Delete.cshtml" />
+    <Content Include="Views\Bodegas\Details.cshtml" />
+    <Content Include="Views\Bodegas\Edit.cshtml" />
+    <Content Include="Views\Bodegas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Images\" />
     <Folder Include="Content\Logos\" />
     <Folder Include="Content\Photos\" />
   </ItemGroup>

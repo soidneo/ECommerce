@@ -13,7 +13,7 @@ namespace ECommerce.Models
         [Key]
         public int CiudadID { get; set; }
 
-        [Display(Name = "Nombre Ciudad")]
+        [Display(Name = "Ciudad")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [StringLength(30, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
         [Index("Ciudad_DepartamentoID_Nombre_Index", 2,IsUnique = true)]
@@ -27,5 +27,6 @@ namespace ECommerce.Models
         public virtual Departamento Departamento { get; set; }
         public virtual ICollection<Empresa> Empresas { get; set; }
         public virtual ICollection<Usuario> Usuarios { get; set; }
+        public virtual ICollection<Bodega> Bodegas { get; set; }
     }
 }

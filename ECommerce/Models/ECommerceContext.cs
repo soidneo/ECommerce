@@ -31,5 +31,9 @@ namespace ECommerce.Models
         public System.Data.Entity.DbSet<ECommerce.Models.Impuesto> Impuestoes { get; set; }
 
         public System.Data.Entity.DbSet<ECommerce.Models.Producto> Productoes { get; set; }
+
+        public System.Data.Entity.DbSet<ECommerce.Models.Bodega> Bodegas { get; set; }
+
+        public System.Data.Entity.DbSet<ECommerce.Models.Inventario> Inventarios { get; set; }
     }
 }
