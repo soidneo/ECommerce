@@ -45,19 +45,14 @@ namespace ECommerce.Models
         public HttpPostedFileBase LogoFile { get; set; }
 
         public virtual Departamento Departamento { get; set; }
-
         public virtual Ciudad Ciudad { get; set; }
-
         public virtual ICollection<Usuario> Usuarios { get; set; }
-
         public virtual ICollection<Categoria> Categorias { get; set; }
-
         public virtual ICollection<Impuesto> Impuestos { get; set; }
-
         public virtual ICollection<Producto> Productos { get; set; }
-
         public virtual ICollection<Bodega> Bodegas { get; set; }
-
+        public virtual ICollection<Cliente> Clientes { get; set; }
+        public virtual ICollection<Venta> Ventas { get; set; }
     }
 }
 

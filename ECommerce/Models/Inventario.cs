@@ -18,10 +18,10 @@ namespace ECommerce.Models
         [Required]
         public int ProductoID { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = false)]
         public double stock { get; set; }
 
         public virtual Bodega Bodega { get; set; }
-
         public virtual Producto Producto { get; set; }
     }
 }

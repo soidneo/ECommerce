@@ -66,10 +66,7 @@ namespace ECommerce.Models
         public HttpPostedFileBase PhotoFile { get; set; }
 
         public virtual Departamento Departamento { get; set; }
-
         public virtual Ciudad Ciudad { get; set; }
-
         public virtual Empresa Empresa { get; set; }
     }
-
 }

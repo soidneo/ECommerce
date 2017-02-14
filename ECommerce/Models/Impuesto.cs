@@ -22,7 +22,7 @@ namespace ECommerce.Models
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [DisplayFormat(DataFormatString ="{0:P2}",ApplyFormatInEditMode = false)]
         [Range(0.00, 1.00, ErrorMessage = "Debe seleccionar una {0} entre {1} y {2}")]
-        public decimal Tasa { get; set; }
+        public double Tasa { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [Range(1, double.MaxValue, ErrorMessage = "Debe seleccionar una empresa")]
@@ -30,7 +30,6 @@ namespace ECommerce.Models
         public int EmpresaID { get; set; }
 
         public virtual Empresa Empresa { get; set; }
-
         public virtual ICollection<Producto> Productos { get; set; }
     }
 }

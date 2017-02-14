@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace ECommerce.Clases
 {
@@ -30,6 +31,17 @@ namespace ECommerce.Clases
                 Nombre = "[Seleccione una ciudad...]"
             });
             return ciudades.OrderBy(c => c.Nombre).ToList();
+        }
+
+        public static List<Cliente> GetClientes(int EmpresaID)
+        {
+            var clientes = db.Clientes.Where(c => c.EmpresaID == EmpresaID).ToList();
+            clientes.Add(new Cliente
+            {
+                ClienteID = 0,
+                Nombre = "[Seleccione un cliente...]"
+            });
+            return clientes.OrderBy(c => c.Nombre).ThenBy(d => d.Apellido).ToList();
         }
 
         public static List<Empresa> GetEmpresas()
@@ -63,6 +75,18 @@ namespace ECommerce.Clases
             });
             return impuestos.OrderBy(i => i.Descripcion).ToList();
         }
+
+        public static List<Producto> getProductos(int empresaID)
+        {
+            var productos = db.Productoes.Where(i => i.EmpresaID == empresaID).ToList();
+            productos.Add(new Producto
+            {
+                ProductoID = 0,
+                Descripcion = "[Seleccione un producto...]"
+            });
+            return productos.OrderBy(i => i.Descripcion).ToList();
+        }
+
         public void Dispose()
         {
             db.Dispose();

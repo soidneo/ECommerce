@@ -25,7 +25,6 @@ namespace ECommerce.Models
         public int EmpresaID { get; set; }
         
         public virtual Empresa Empresa { get; set; }
-
         public virtual ICollection<Producto> Productos { get; set; }
     }
 }

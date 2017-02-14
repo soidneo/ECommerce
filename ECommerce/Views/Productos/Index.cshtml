@@ -33,7 +33,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Comentarios)
         </th>
-        <th></th>
+        <th>
+            Stock
+        </th>
     </tr>
 
 @foreach (var item in Model) {
@@ -62,6 +64,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Comentarios)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.stock)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ProductoID }) |
