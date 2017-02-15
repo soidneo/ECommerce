@@ -15,7 +15,7 @@ namespace ECommerce.Models
 
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [Range(0, double.MaxValue, ErrorMessage = "Debe seleccionar un {0}")]
+        [Range(0, double.MaxValue, ErrorMessage = "Solo valores positivos")]
         public double Cantidad { get; set; }
     }
 }

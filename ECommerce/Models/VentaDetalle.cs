@@ -24,18 +24,18 @@ namespace ECommerce.Models
         public string descripcion { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [Range(1, double.MaxValue, ErrorMessage = "Debe seleccionar una {0}")]
-        [Display(Name = "Tasa Impuesto")]
+        [Range(0, double.MaxValue, ErrorMessage = "Debe seleccionar una {0}")]
+        [Display(Name = "Impuesto")]
         public double Tasa { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [Range(1, double.MaxValue, ErrorMessage = "Debe seleccionar una {0}")]
+        [Range(0, double.MaxValue, ErrorMessage = "Debe seleccionar una {0}")]
         public decimal Precio { get; set; }
 
-        [Display(Name = "Cantidad")]
         [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = false)]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
+        [Range(0, double.MaxValue, ErrorMessage = "Debe seleccionar una {0}")]
         public double Cantidad { get; set; }
 
         public virtual Venta Venta { get; set; }

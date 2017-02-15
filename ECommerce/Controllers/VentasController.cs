@@ -8,15 +8,71 @@ using System.Web;
 using System.Web.Mvc;
 using ECommerce.Models;
 using ECommerce.Clases;
-using System.Data.Entity.Validation;
 
 namespace ECommerce.Controllers
 {
-    [Authorize(Roles = "User")]
+    [Authorize(Roles ="User")]
     public class VentasController : Controller
     {
         private ECommerceContext db = new ECommerceContext();
 
+        public ActionResult AddProducto()
+        {
+            var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            ViewBag.ProductoID = new SelectList(CombosHelper.getProductos(user.EmpresaID), "ProductoID", "Descripcion");
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AddProducto(AddProductoVista vista)
+        {
+            var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            if (ModelState.IsValid)
+            {
+                var producto = db.Productoes.Find(vista.ProductoID);
+                var ventaDetallesTmp = db.VentaDetalleTmps.Where(
+                    u => u.UserName == User.Identity.Name && u.ProductoID == vista.ProductoID).FirstOrDefault();
+                if (ventaDetallesTmp == null)
+                {
+                    ventaDetallesTmp = new VentaDetalleTmp
+                    {
+                        Descripcion = producto.Descripcion,
+                        Precio = producto.Precio,
+                        ProductoID = producto.ProductoID,
+                        Cantidad = vista.Cantidad,
+                        Tasa = producto.Impuesto.Tasa,
+                        UserName = User.Identity.Name,
+                    };
+                    db.VentaDetalleTmps.Add(ventaDetallesTmp);
+                }
+                else
+                {
+                    ventaDetallesTmp.Cantidad += vista.Cantidad;
+                    db.Entry(ventaDetallesTmp).State = EntityState.Modified;
+                }
+                db.SaveChanges();
+                return RedirectToAction("Create");
+            }
+            ViewBag.ProductoID = new SelectList(CombosHelper.getProductos(user.EmpresaID), "ProductoID", "Descripcion");
+            return View();
+        }
+
+        public ActionResult DelProducto(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var ventaDetallesTmp = db.VentaDetalleTmps.Where(
+                    u => u.UserName == User.Identity.Name && u.ProductoID == id).FirstOrDefault();
+            if (ventaDetallesTmp == null)
+            {
+                return HttpNotFound();
+            }
+            db.VentaDetalleTmps.Remove(ventaDetallesTmp);
+            db.SaveChanges();
+            return RedirectToAction("Create");
+        }
         // GET: Ventas
         public ActionResult Index()
         {
@@ -44,11 +100,11 @@ namespace ECommerce.Controllers
         public ActionResult Create()
         {
             var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-            ViewBag.ClienteID = new SelectList(CombosHelper.GetClientes(user.EmpresaID), "ClienteID", "fullName");
-            var vista = new NuevaVentaVista
+            ViewBag.ClienteID = new SelectList(CombosHelper.GetClientes(user.EmpresaID), "ClienteID", "FullName");
+            var vista = new NuevaOrdenVista
             {
                 Fecha = DateTime.Now,
-                Detalles = db.VentaDetallesTmps.Where(v => v.UserName == User.Identity.Name).ToList(),
+                Detalles = db.VentaDetalleTmps.Where(v => v.UserName == User.Identity.Name).ToList(),
             };
             return View(vista);
         }
@@ -58,23 +114,23 @@ namespace ECommerce.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(NuevaVentaVista vista)
+        public ActionResult Create(NuevaOrdenVista vista)
         {
             if (ModelState.IsValid)
             {
-                var response = MovimientosHelper.NuevaVenta(vista,User.Identity.Name);
+                var response = MovimientosHelper.NuevaVenta(vista, User.Identity.Name);
                 if (response.Succeeded)
                 {
                     return RedirectToAction("Index");
                 }
                 //db.Ventas.Add(venta);
                 //db.SaveChanges();
-                ModelState.AddModelError(string.Empty,response.Message);
+                ModelState.AddModelError(string.Empty, response.Message);
             }
-
             var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            vista.Detalles = db.VentaDetalleTmps.Where(v => v.UserName == User.Identity.Name).ToList();
             ViewBag.ClienteID = new SelectList(CombosHelper.GetClientes(user.EmpresaID), "ClienteID", "fullName");
-            
+
             return View(vista);
         }
 
@@ -91,6 +147,7 @@ namespace ECommerce.Controllers
                 return HttpNotFound();
             }
             ViewBag.ClienteID = new SelectList(db.Clientes, "ClienteID", "UserName", venta.ClienteID);
+            ViewBag.EmpresaID = new SelectList(db.Empresas, "EmpresaID", "Nombre", venta.EmpresaID);
             ViewBag.EstadoID = new SelectList(db.Estadoes, "EstadoID", "Descripcion", venta.EstadoID);
             return View(venta);
         }
@@ -100,7 +157,7 @@ namespace ECommerce.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "VentaID,ClienteID,EstadoID,Fecha,Comentarios")] Venta venta)
+        public ActionResult Edit([Bind(Include = "VentaID,EmpresaID,ClienteID,EstadoID,Fecha,Comentarios")] Venta venta)
         {
             if (ModelState.IsValid)
             {
@@ -109,6 +166,7 @@ namespace ECommerce.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.ClienteID = new SelectList(db.Clientes, "ClienteID", "UserName", venta.ClienteID);
+            ViewBag.EmpresaID = new SelectList(db.Empresas, "EmpresaID", "Nombre", venta.EmpresaID);
             ViewBag.EstadoID = new SelectList(db.Estadoes, "EstadoID", "Descripcion", venta.EstadoID);
             return View(venta);
         }
@@ -139,61 +197,6 @@ namespace ECommerce.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult AddProducto()
-        {
-            var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-            ViewBag.ProductoID = new SelectList(CombosHelper.getProductos(user.EmpresaID), "ProductoID", "Descripcion");
-            return View();
-        }
-        [HttpPost]
-        public ActionResult AddProducto(AddProductoVista vista)
-        {
-            var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-            if (ModelState.IsValid)
-            {
-                var producto = db.Productoes.Find(vista.ProductoID);
-                var ventaDetallesTmp = db.VentaDetallesTmps.Where(
-                    u => u.UserName == user.UserName && u.ProductoID == vista.ProductoID).FirstOrDefault();
-                if (ventaDetallesTmp == null)
-                {
-                    ventaDetallesTmp = new VentaDetallesTmp
-                    {
-                        Descripcion = producto.Descripcion,
-                        Precio = producto.Precio,
-                        ProductoID = producto.ProductoID,
-                        Cantidad = vista.Cantidad,
-                        Tasa = producto.Impuesto.Tasa,
-                        UserName = User.Identity.Name,
-                    };
-                    db.VentaDetallesTmps.Add(ventaDetallesTmp);
-                }
-                else
-                {
-                    ventaDetallesTmp.Cantidad += vista.Cantidad;
-                    db.Entry(ventaDetallesTmp).State = EntityState.Modified;
-                }
-                db.SaveChanges();
-                return RedirectToAction("Create");
-            }
-            ViewBag.ProductoID = new SelectList(CombosHelper.getProductos(user.EmpresaID), "ProductoID", "Descripcion");
-            return View();
-        }
-        public ActionResult DelProducto(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var ventaDetallesTmp = db.VentaDetallesTmps.Where(
-                    u => u.UserName == User.Identity.Name && u.ProductoID == id).FirstOrDefault();
-            if (ventaDetallesTmp == null)
-            {
-                return HttpNotFound();
-            }
-            db.VentaDetallesTmps.Remove(ventaDetallesTmp);
-            db.SaveChanges();
-            return RedirectToAction("Create");
-        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

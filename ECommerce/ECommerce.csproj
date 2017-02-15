@@ -215,13 +215,13 @@
     <Compile Include="Models\Impuesto.cs" />
     <Compile Include="Models\Inventario.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\NuevaVentaVista.cs" />
+    <Compile Include="Models\NuevaOrdenVista.cs" />
     <Compile Include="Models\Producto.cs" />
     <Compile Include="Models\Respuesta.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Models\Venta.cs" />
     <Compile Include="Models\VentaDetalle.cs" />
-    <Compile Include="Models\VentaDetallesTmp.cs" />
+    <Compile Include="Models\VentaDetalleTmp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

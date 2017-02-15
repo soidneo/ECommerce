@@ -59,11 +59,11 @@ namespace ECommerce.Models
         [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = false)]
         public double stock { get { return Inventarios == null ? 0 : Inventarios.Sum(i => i.stock); } }
 
-    public virtual Empresa Empresa { get; set; }
+        public virtual Empresa Empresa { get; set; }
         public virtual Categoria Categoria { get; set; }
         public virtual Impuesto Impuesto { get; set; }
         public virtual ICollection<Inventario> Inventarios { get; set; }
         public virtual ICollection<VentaDetalle> VentaDetalles { get; set; }
-        public virtual ICollection<VentaDetallesTmp> VentaDetallesTmps { get; set; }
+        public virtual ICollection<VentaDetalleTmp> VentaDetalleTmps { get; set; }
     }
 }

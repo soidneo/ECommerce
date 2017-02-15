@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<ECommerce.Models.Cliente>
 
 @{
-    ViewBag.Title = "Clientes";
+    ViewBag.Title = "Index";
 }
 
-<h2>Clientes</h2>
+<h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -17,14 +17,18 @@
         <th>
             @Html.DisplayNameFor(model => model.Departamento.Nombre)
         </th>
-        
+        <th>
+            @Html.DisplayNameFor(model => model.Empresa.Nombre)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.UserName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FullName)
+            @Html.DisplayNameFor(model => model.Nombre)
         </th>
-       
+        <th>
+            @Html.DisplayNameFor(model => model.Apellido)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.Telefono)
         </th>
@@ -42,12 +46,17 @@
         <td>
             @Html.DisplayFor(modelItem => item.Departamento.Nombre)
         </td>
-       
+        <td>
+            @Html.DisplayFor(modelItem => item.Empresa.Nombre)
+        </td>
         <td>
             @Html.DisplayFor(modelItem => item.UserName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.FullName)
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Apellido)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Telefono)

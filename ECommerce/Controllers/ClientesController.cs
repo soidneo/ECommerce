@@ -62,7 +62,7 @@ namespace ECommerce.Controllers
             {
                 db.Clientes.Add(cliente);
                 db.SaveChanges();
-                UsuariosHelper.CreateUserAsp(cliente.UserName,"Cliente");
+                UsuariosHelper.CreateUserAsp(cliente.UserName, "Cliente");
                 return RedirectToAction("Index");
             }
 

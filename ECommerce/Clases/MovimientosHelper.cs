@@ -17,7 +17,7 @@ namespace ECommerce.Clases
             db.Dispose();
         }
 
-        public static Respuesta NuevaVenta(NuevaVentaVista vista, string userName)
+        public static Respuesta NuevaVenta(NuevaOrdenVista vista, string userName)
         {
             using (var transaction = db.Database.BeginTransaction())
             {
@@ -35,7 +35,7 @@ namespace ECommerce.Clases
                     db.Ventas.Add(venta);
                     db.SaveChanges();
 
-                    var detalles = db.VentaDetallesTmps.Where(v => v.UserName == userName).ToList();
+                    var detalles = db.VentaDetalleTmps.Where(v => v.UserName == userName).ToList();
                     foreach (var detalle in detalles)
                     {
                         var ventaDetalles = new VentaDetalle
@@ -48,7 +48,7 @@ namespace ECommerce.Clases
                             Tasa = detalle.Tasa,
                         };
                         db.VentaDetalles.Add(ventaDetalles);
-                        db.VentaDetallesTmps.Remove(detalle);
+                        db.VentaDetalleTmps.Remove(detalle);
                     }
                     db.SaveChanges();
                     transaction.Commit();

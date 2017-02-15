@@ -10,7 +10,6 @@ using ECommerce.Models;
 
 namespace ECommerce.Controllers
 {
-    [Authorize(Roles ="Admin")]
     public class EstadosController : Controller
     {
         private ECommerceContext db = new ECommerceContext();

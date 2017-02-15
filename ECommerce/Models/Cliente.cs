@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
 namespace ECommerce.Models
 {
@@ -56,7 +55,7 @@ namespace ECommerce.Models
         [Display(Name = "Ciudad")]
         public int CiudadID { get; set; }
 
-        
+
 
         [Display(Name = "Cliente")]
         public string FullName { get { return string.Format("{0} {1}", Nombre, Apellido); } }
