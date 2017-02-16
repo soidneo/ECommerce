@@ -18,7 +18,24 @@ namespace ECommerce.Clases
             catch (Exception ex)
             {
 
-                return new Respuesta { Succeeded = false, Message = ex.Message };
+                var respuesta = new Respuesta { Succeeded = false, };
+                if (ex.InnerException != null &&
+                    ex.InnerException.InnerException != null &&
+                    ex.InnerException.InnerException.Message.Contains("_Index"))
+                {
+                    respuesta.Message = "¡Error! el registro ya existe";
+                }
+                if (ex.InnerException != null &&
+                    ex.InnerException.InnerException != null &&
+                    ex.InnerException.InnerException.Message.Contains("REFERENCE"))
+                {
+                    respuesta.Message = "¡Error! no se puede eliminar. Tiene registros relacionados";
+                }
+                else
+                {
+                    respuesta.Message = ex.Message;
+                }
+                return respuesta;
             }
         }
 

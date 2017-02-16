@@ -10,7 +10,7 @@
 @using (Html.BeginForm("Create", "Usuarios", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Usuario</h4>
         <hr />
@@ -56,11 +56,23 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PhotoFile,"Foto", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.PhotoFile, "Foto", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <span class="btn btn-link btn-file">
-                    @Html.TextBoxFor(model => model.PhotoFile, htmlAttributes: new { @type = "file" })
-                </span>
+                <div class="file-input-new">
+                    <div class="input-group" style="width:280px">
+                        <div tabindex="500" class="form-control file-caption">
+                            <div class="file-caption-name" id="NombreArchivo">
+                            </div>
+                        </div>
+                        <div class="input-group-btn" style="height:auto">
+                            <div tabindex="500" class="btn btn-primary btn-file">
+                                <i class="glyphicon glyphicon-folder-open"></i>
+                                Abrir...
+                                @Html.TextBoxFor(modelo => modelo.PhotoFile, new { type = "file", id = "files" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -101,30 +113,7 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
-        $(document).ready(function () {
-            $("#CiudadID").empty();
-            $("#CiudadID").append('<option value="0">[Seleccione una ciudad...]</option>');
-            $("#DepartamentoID").change(function () {
-                $("#CiudadID").empty();
-                $("#CiudadID").append('<option value="0">[Seleccione una ciudad...]</option>');
-                $.ajax({
-                    type: 'POST',
-                    url:'@Url.Action("GetCiudadesDe")',
-                    dataType: 'json',
-                    data: { departamentoId: $("#DepartamentoID").val() },
-                    success: function (data) {
-                        $.each(data,function (i,data) {
-                            $("#CiudadID").append('<option value="'
-                                + data.CiudadID + '">'
-                                + data.Nombre + '</option>');
-                            });
-                    },
-                    error: function (ex) {
-                        alert('Fallo la carga de ciudades. '+ex);
-                    }
-                });
-                return false;
-            })
-        });
+        var Url = '@Url.Action("GetCities", "Generic")';
     </script>
+
 }

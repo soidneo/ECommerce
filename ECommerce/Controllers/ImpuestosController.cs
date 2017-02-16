@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ECommerce.Models;
+using ECommerce.Clases;
 
 namespace ECommerce.Controllers
 {
@@ -64,7 +65,12 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Impuestoes.Add(impuesto);
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
                 return RedirectToAction("Index");
             }
             return View(impuesto);
@@ -95,7 +101,13 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(impuesto).State = EntityState.Modified;
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
+
                 return RedirectToAction("Index");
             }
             return View(impuesto);
@@ -123,7 +135,12 @@ namespace ECommerce.Controllers
         {
             Impuesto impuesto = db.Impuestoes.Find(id);
             db.Impuestoes.Remove(impuesto);
-            db.SaveChanges();
+            var respuesta = DbHelper.Guardar(db);
+            if (respuesta.Succeeded == false)
+            {
+                ModelState.AddModelError(string.Empty, respuesta.Message);
+                return RedirectToAction("Index");
+            }
             return RedirectToAction("Index");
         }
 

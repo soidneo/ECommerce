@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ECommerce.Models;
+using ECommerce.Clases;
 
 namespace ECommerce.Controllers
 {
@@ -65,7 +66,13 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Categorias.Add(categoria);
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
+
                 return RedirectToAction("Index");
             }
 
@@ -98,7 +105,13 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(categoria).State = EntityState.Modified;
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
+
                 return RedirectToAction("Index");
             }
             ViewBag.EmpresaID = new SelectList(db.Empresas, "EmpresaID", "Nombre", categoria.EmpresaID);
@@ -127,7 +140,12 @@ namespace ECommerce.Controllers
         {
             Categoria categoria = db.Categorias.Find(id);
             db.Categorias.Remove(categoria);
-            db.SaveChanges();
+            var respuesta = DbHelper.Guardar(db);
+            if (respuesta.Succeeded == false)
+            {
+                ModelState.AddModelError(string.Empty, respuesta.Message);
+                return RedirectToAction("Index");
+            }
             return RedirectToAction("Index");
         }
 

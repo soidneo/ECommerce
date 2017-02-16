@@ -44,7 +44,7 @@ namespace ECommerce.Controllers
         // GET: Clientes/Create
         public ActionResult Create()
         {
-            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre");
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre");
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre");
             var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
             var cliente = new Cliente { EmpresaID = user.EmpresaID, };
@@ -61,12 +61,17 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Clientes.Add(cliente);
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
                 UsuariosHelper.CreateUserAsp(cliente.UserName, "Cliente");
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre", cliente.CiudadID);
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre", cliente.CiudadID);
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre", cliente.DepartamentoID);
             return View(cliente);
         }
@@ -83,7 +88,7 @@ namespace ECommerce.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre", cliente.CiudadID);
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(cliente.DepartamentoID), "CiudadID", "Nombre", cliente.CiudadID);
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre", cliente.DepartamentoID);
             return View(cliente);
         }
@@ -98,10 +103,15 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(cliente).State = EntityState.Modified;
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
                 return RedirectToAction("Index");
             }
-            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre", cliente.CiudadID);
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(cliente.DepartamentoID), "CiudadID", "Nombre", cliente.CiudadID);
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre", cliente.DepartamentoID);
             return View(cliente);
         }
@@ -128,7 +138,13 @@ namespace ECommerce.Controllers
         {
             Cliente cliente = db.Clientes.Find(id);
             db.Clientes.Remove(cliente);
-            db.SaveChanges();
+            var respuesta = DbHelper.Guardar(db);
+            if (respuesta.Succeeded == false)
+            {
+                ModelState.AddModelError(string.Empty, respuesta.Message);
+                return RedirectToAction("Index");
+            }
+
             UsuariosHelper.DeleteUser(cliente.UserName);
             return RedirectToAction("Index");
         }

@@ -10,7 +10,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Bodega</h4>
         <hr />
@@ -73,29 +73,6 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
-        $(document).ready(function () {
-            $("#CiudadID").append('<option value="0">[Seleccione una ciudad...]</option>');
-            $("#DepartamentoID").change(function () {
-                $("#CiudadID").empty();
-                $("#CiudadID").append('<option value="0">[Seleccione una ciudad...]</option>');
-                $.ajax({
-                    type: 'POST',
-                    url:'@Url.Action("GetCiudadesDe")',
-                    dataType: 'json',
-                    data: { departamentoId: $("#DepartamentoID").val() },
-                    success: function (data) {
-                        $.each(data,function (i,data) {
-                            $("#CiudadID").append('<option value="'
-                                + data.CiudadID + '">'
-                                + data.Nombre + '</option>');
-                            });
-                    },
-                    error: function (ex) {
-                        alert('Fallo la carga de ciudades. '+ex);
-                    }
-                });
-                return false;
-            })
-        });
+        var Url = '@Url.Action("GetCities", "Generic")';
     </script>
 }

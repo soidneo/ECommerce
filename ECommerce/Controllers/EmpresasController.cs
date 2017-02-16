@@ -40,7 +40,7 @@ namespace ECommerce.Controllers
         // GET: Empresas/Create
         public ActionResult Create()
         {
-            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre");
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre");
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
                 "DepartamentoID", "Nombre");
             return View();
@@ -56,8 +56,12 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Empresas.Add(empresa);
-                db.SaveChanges();
-
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
                 if (empresa.LogoFile != null)
                 {
                     var folder = "~/Content/Logos";
@@ -70,16 +74,22 @@ namespace ECommerce.Controllers
                         var pic = string.Format("{0}/{1}", folder, fileName);
                         empresa.Logo = pic;
                         db.Entry(empresa).State = EntityState.Modified;
-                        db.SaveChanges();
-                    }   
-                    
+                        respuesta = DbHelper.Guardar(db);
+                        if (respuesta.Succeeded == false)
+                        {
+                            ModelState.AddModelError(string.Empty, respuesta.Message);
+                            return RedirectToAction("Index");
+                        }
+
+                    }
+
                 }
                 
                 
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre");
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre");
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
                 "DepartamentoID", "Nombre");
             return View(empresa);
@@ -97,7 +107,7 @@ namespace ECommerce.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre",empresa.CiudadID);
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(empresa.DepartamentoID), "CiudadID", "Nombre",empresa.CiudadID);
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
                 "DepartamentoID", "Nombre",empresa.DepartamentoID);
             return View(empresa);
@@ -123,10 +133,15 @@ namespace ECommerce.Controllers
                     
                 }
                 db.Entry(empresa).State = EntityState.Modified;
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
                 return RedirectToAction("Index");
             }
-            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre");
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(empresa.DepartamentoID), "CiudadID", "Nombre");
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
                 "DepartamentoID", "Nombre");
             return View(empresa);
@@ -154,16 +169,16 @@ namespace ECommerce.Controllers
         {
             Empresa empresa = db.Empresas.Find(id);
             db.Empresas.Remove(empresa);
-            db.SaveChanges();
+            var respuesta = DbHelper.Guardar(db);
+            if (respuesta.Succeeded == false)
+            {
+                ModelState.AddModelError(string.Empty, respuesta.Message);
+                return RedirectToAction("Index");
+            }
             return RedirectToAction("Index");
         }
 
-        public JsonResult GetCiudadesDe(int departamentoId)
-        {
-            db.Configuration.ProxyCreationEnabled = false;
-            var ciudadesDe = db.Ciudads.Where(c => c.DepartamentoID == departamentoId);
-            return Json(ciudadesDe);
-        }
+       
 
         protected override void Dispose(bool disposing)
         {

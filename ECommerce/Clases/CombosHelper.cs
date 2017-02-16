@@ -22,9 +22,9 @@ namespace ECommerce.Clases
             });
             return departamentos.OrderBy(d => d.Nombre).ToList();
         }
-        public static List<Ciudad> GetCiudades()
+        public static List<Ciudad> GetCiudades(int id)
         {
-            var ciudades = db.Ciudads.ToList();
+            var ciudades = db.Ciudads.Where(c => c.DepartamentoID == id).ToList();
             ciudades.Add(new Ciudad
             {
                 CiudadID = 0,

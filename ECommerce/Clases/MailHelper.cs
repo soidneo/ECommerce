@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ECommerce.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -33,6 +36,7 @@ namespace ECommerce.Clases
                 await smtp.SendMailAsync(message);
             }
         }
+        
 
         public static async Task SendMail(List<string> mails, string subject, string body)
         {

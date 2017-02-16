@@ -67,7 +67,12 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Productoes.Add(producto);
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
                 if (producto.ImageFile != null)
                 {
                     var folder = "~/Content/Images";
@@ -80,7 +85,13 @@ namespace ECommerce.Controllers
                         var pic = string.Format("{0}/{1}", folder, fileName);
                         producto.Image = pic;
                         db.Entry(producto).State = EntityState.Modified;
-                        db.SaveChanges();
+                        respuesta = DbHelper.Guardar(db);
+                        if (respuesta.Succeeded == false)
+                        {
+                            ModelState.AddModelError(string.Empty, respuesta.Message);
+                            return RedirectToAction("Index");
+                        }
+
                     }
 
                 }
@@ -131,7 +142,13 @@ namespace ECommerce.Controllers
 
                 }
                 db.Entry(producto).State = EntityState.Modified;
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
+
                 return RedirectToAction("Index");
             }
             ViewBag.CategoriaID = new SelectList(CombosHelper.GetCategorias(producto.EmpresaID), "CategoriaID", "Descripcion", producto.CategoriaID);
@@ -161,7 +178,13 @@ namespace ECommerce.Controllers
         {
             Producto producto = db.Productoes.Find(id);
             db.Productoes.Remove(producto);
-            db.SaveChanges();
+            var respuesta = DbHelper.Guardar(db);
+            if (respuesta.Succeeded == false)
+            {
+                ModelState.AddModelError(string.Empty, respuesta.Message);
+                return RedirectToAction("Index");
+            }
+
             return RedirectToAction("Index");
         }
         

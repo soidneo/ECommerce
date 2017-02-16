@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ECommerce.Models;
+using ECommerce.Clases;
 
 namespace ECommerce.Controllers
 {
@@ -51,7 +52,13 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Estadoes.Add(estado);
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
+
                 return RedirectToAction("Index");
             }
 
@@ -78,12 +85,18 @@ namespace ECommerce.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "EstadoID,Descripcion")] Estado estado)
+        public ActionResult Edit(Estado estado)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(estado).State = EntityState.Modified;
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
+
                 return RedirectToAction("Index");
             }
             return View(estado);
@@ -111,7 +124,13 @@ namespace ECommerce.Controllers
         {
             Estado estado = db.Estadoes.Find(id);
             db.Estadoes.Remove(estado);
-            db.SaveChanges();
+            var respuesta = DbHelper.Guardar(db);
+            if (respuesta.Succeeded == false)
+            {
+                ModelState.AddModelError(string.Empty, respuesta.Message);
+                return RedirectToAction("Index");
+            }
+
             return RedirectToAction("Index");
         }
 

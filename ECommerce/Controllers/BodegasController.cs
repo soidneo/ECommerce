@@ -46,7 +46,7 @@ namespace ECommerce.Controllers
         // GET: Bodegas/Create
         public ActionResult Create()
         {
-            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre");
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre");
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre");
             var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
             var bodega = new Bodega { EmpresaID = user.EmpresaID, };
@@ -63,11 +63,15 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Bodegas.Add(bodega);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError(string.Empty,respuesta.Message);
             }
 
-            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre", bodega.CiudadID);
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre", bodega.CiudadID);
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre", bodega.DepartamentoID);
             return View(bodega);
         }
@@ -99,10 +103,15 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(bodega).State = EntityState.Modified;
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError(string.Empty, respuesta.Message);
                 return RedirectToAction("Index");
             }
-            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(), "CiudadID", "Nombre", bodega.CiudadID);
+            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(bodega.DepartamentoID), "CiudadID", "Nombre", bodega.CiudadID);
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre", bodega.DepartamentoID);
             return View(bodega);
         }
@@ -129,15 +138,15 @@ namespace ECommerce.Controllers
         {
             Bodega bodega = db.Bodegas.Find(id);
             db.Bodegas.Remove(bodega);
-            db.SaveChanges();
+            var respuesta = DbHelper.Guardar(db);
+            if (respuesta.Succeeded)
+            {
+                return RedirectToAction("Index");
+            }
+            ModelState.AddModelError(string.Empty, respuesta.Message);
             return RedirectToAction("Index");
         }
-        public JsonResult GetCiudadesDe(int departamentoId)
-        {
-            db.Configuration.ProxyCreationEnabled = false;
-            var ciudadesDe = db.Ciudads.Where(c => c.DepartamentoID == departamentoId);
-            return Json(ciudadesDe);
-        }
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)

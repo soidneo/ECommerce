@@ -20,7 +20,7 @@ namespace ECommerce.Controllers
         {
             var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
             ViewBag.ProductoID = new SelectList(CombosHelper.getProductos(user.EmpresaID), "ProductoID", "Descripcion");
-            return View();
+            return PartialView();
         }
 
         [HttpPost]
@@ -50,11 +50,16 @@ namespace ECommerce.Controllers
                     ventaDetallesTmp.Cantidad += vista.Cantidad;
                     db.Entry(ventaDetallesTmp).State = EntityState.Modified;
                 }
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Create");
+                }
                 return RedirectToAction("Create");
             }
             ViewBag.ProductoID = new SelectList(CombosHelper.getProductos(user.EmpresaID), "ProductoID", "Descripcion");
-            return View();
+            return PartialView();
         }
 
         public ActionResult DelProducto(int? id)
@@ -70,7 +75,13 @@ namespace ECommerce.Controllers
                 return HttpNotFound();
             }
             db.VentaDetalleTmps.Remove(ventaDetallesTmp);
-            db.SaveChanges();
+            var respuesta = DbHelper.Guardar(db);
+            if (respuesta.Succeeded == false)
+            {
+                ModelState.AddModelError(string.Empty, respuesta.Message);
+                return RedirectToAction("Create");
+            }
+
             return RedirectToAction("Create");
         }
         // GET: Ventas
@@ -123,8 +134,6 @@ namespace ECommerce.Controllers
                 {
                     return RedirectToAction("Index");
                 }
-                //db.Ventas.Add(venta);
-                //db.SaveChanges();
                 ModelState.AddModelError(string.Empty, response.Message);
             }
             var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
@@ -157,12 +166,18 @@ namespace ECommerce.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "VentaID,EmpresaID,ClienteID,EstadoID,Fecha,Comentarios")] Venta venta)
+        public ActionResult Edit(Venta venta)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(venta).State = EntityState.Modified;
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
+
                 return RedirectToAction("Index");
             }
             ViewBag.ClienteID = new SelectList(db.Clientes, "ClienteID", "UserName", venta.ClienteID);
@@ -193,7 +208,12 @@ namespace ECommerce.Controllers
         {
             Venta venta = db.Ventas.Find(id);
             db.Ventas.Remove(venta);
-            db.SaveChanges();
+            var respuesta = DbHelper.Guardar(db);
+            if (respuesta.Succeeded == false)
+            {
+                ModelState.AddModelError(string.Empty, respuesta.Message);
+                return RedirectToAction("Index");
+            }
             return RedirectToAction("Index");
         }
 

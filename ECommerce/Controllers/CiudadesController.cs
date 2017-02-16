@@ -51,12 +51,18 @@ namespace ECommerce.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CiudadID,Nombre,DepartamentoID")] Ciudad ciudad)
+        public ActionResult Create(Ciudad ciudad)
         {
             if (ModelState.IsValid)
             {
                 db.Ciudads.Add(ciudad);
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
+
                 return RedirectToAction("Index");
             }
 
@@ -86,12 +92,18 @@ namespace ECommerce.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CiudadID,Nombre,DepartamentoID")] Ciudad ciudad)
+        public ActionResult Edit(Ciudad ciudad)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(ciudad).State = EntityState.Modified;
-                db.SaveChanges();
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded == false)
+                {
+                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    return RedirectToAction("Index");
+                }
+
                 return RedirectToAction("Index");
             }
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
@@ -120,7 +132,13 @@ namespace ECommerce.Controllers
         {
             Ciudad ciudad = db.Ciudads.Find(id);
             db.Ciudads.Remove(ciudad);
-            db.SaveChanges();
+            var respuesta = DbHelper.Guardar(db);
+            if (respuesta.Succeeded == false)
+            {
+                ModelState.AddModelError(string.Empty, respuesta.Message);
+                return RedirectToAction("Index");
+            }
+
             return RedirectToAction("Index");
         }
 
