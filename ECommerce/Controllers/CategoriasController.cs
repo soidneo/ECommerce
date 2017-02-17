@@ -61,19 +61,17 @@ namespace ECommerce.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CategoriaID,Descripcion,EmpresaID")] Categoria categoria)
+        public ActionResult Create(Categoria categoria)
         {
             if (ModelState.IsValid)
             {
                 db.Categorias.Add(categoria);
                 var respuesta = DbHelper.Guardar(db);
-                if (respuesta.Succeeded == false)
+                if (respuesta.Succeeded)
                 {
-                    ModelState.AddModelError(string.Empty, respuesta.Message);
                     return RedirectToAction("Index");
                 }
-
-                return RedirectToAction("Index");
+                ModelState.AddModelError(string.Empty, respuesta.Message);
             }
 
             ViewBag.EmpresaID = new SelectList(db.Empresas, "EmpresaID", "Nombre", categoria.EmpresaID);
@@ -100,19 +98,17 @@ namespace ECommerce.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CategoriaID,Descripcion,EmpresaID")] Categoria categoria)
+        public ActionResult Edit(Categoria categoria)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(categoria).State = EntityState.Modified;
                 var respuesta = DbHelper.Guardar(db);
-                if (respuesta.Succeeded == false)
+                if (respuesta.Succeeded)
                 {
-                    ModelState.AddModelError(string.Empty, respuesta.Message);
                     return RedirectToAction("Index");
                 }
-
-                return RedirectToAction("Index");
+                ModelState.AddModelError(string.Empty, respuesta.Message);
             }
             ViewBag.EmpresaID = new SelectList(db.Empresas, "EmpresaID", "Nombre", categoria.EmpresaID);
             return View(categoria);
@@ -141,12 +137,12 @@ namespace ECommerce.Controllers
             Categoria categoria = db.Categorias.Find(id);
             db.Categorias.Remove(categoria);
             var respuesta = DbHelper.Guardar(db);
-            if (respuesta.Succeeded == false)
+            if (respuesta.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, respuesta.Message);
                 return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            ModelState.AddModelError(string.Empty, respuesta.Message);
+            return View(categoria);
         }
 
         protected override void Dispose(bool disposing)

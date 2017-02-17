@@ -17,19 +17,31 @@ namespace ECommerce.Clases
             }
             catch (Exception ex)
             {
-
                 var respuesta = new Respuesta { Succeeded = false, };
                 if (ex.InnerException != null &&
-                    ex.InnerException.InnerException != null &&
-                    ex.InnerException.InnerException.Message.Contains("_Index"))
+                    ex.InnerException.InnerException != null)
                 {
-                    respuesta.Message = "¡Error! el registro ya existe";
-                }
-                if (ex.InnerException != null &&
-                    ex.InnerException.InnerException != null &&
-                    ex.InnerException.InnerException.Message.Contains("REFERENCE"))
-                {
-                    respuesta.Message = "¡Error! no se puede eliminar. Tiene registros relacionados";
+                    if (ex.InnerException.InnerException.Message.Contains("_Index"))
+                    {
+                        respuesta.Message = "¡Error! el registro ya existe";
+                        if (ex.InnerException.InnerException.Message.Contains("BarCode_Index"))
+                        {
+                            respuesta.Message = "¡Error! el Código de barras ya existe";
+                        }
+                        if (ex.InnerException.InnerException.Message.Contains("Descripcion_Index"))
+                        {
+                            respuesta.Message = "¡Error! el Nombre del producto ya existe"; 
+                        }
+                        if (ex.InnerException.InnerException.Message.Contains("Nombre_Index"))
+                        {
+                            respuesta.Message = "¡Error! el Nombre ya existe";
+                        }
+                    }
+                    if (ex.InnerException.InnerException.Message.Contains("REFERENCE"))
+                    {
+                        respuesta.Message = "¡Error! no se puede eliminar. Tiene registros relacionados";
+                    }
+
                 }
                 else
                 {

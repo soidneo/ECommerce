@@ -70,7 +70,6 @@ namespace ECommerce.Controllers
                 }
                 ModelState.AddModelError(string.Empty,respuesta.Message);
             }
-
             ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre", bodega.CiudadID);
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre", bodega.DepartamentoID);
             return View(bodega);
@@ -109,7 +108,6 @@ namespace ECommerce.Controllers
                     return RedirectToAction("Index");
                 }
                 ModelState.AddModelError(string.Empty, respuesta.Message);
-                return RedirectToAction("Index");
             }
             ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(bodega.DepartamentoID), "CiudadID", "Nombre", bodega.CiudadID);
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre", bodega.DepartamentoID);
@@ -144,7 +142,7 @@ namespace ECommerce.Controllers
                 return RedirectToAction("Index");
             }
             ModelState.AddModelError(string.Empty, respuesta.Message);
-            return RedirectToAction("Index");
+            return View(bodega);
         }
         
         protected override void Dispose(bool disposing)

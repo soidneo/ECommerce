@@ -86,6 +86,11 @@ namespace ECommerce.Clases
             });
             return productos.OrderBy(i => i.Descripcion).ToList();
         }
+        public static List<Producto> getProductos(int empresaID, bool sw)
+        {
+            var productos = db.Productoes.Where(p => p.EmpresaID == empresaID).ToList();
+            return productos.OrderBy(p => p.Descripcion).ToList();
+        }
 
         public void Dispose()
         {

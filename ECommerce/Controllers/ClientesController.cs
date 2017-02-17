@@ -62,15 +62,14 @@ namespace ECommerce.Controllers
             {
                 db.Clientes.Add(cliente);
                 var respuesta = DbHelper.Guardar(db);
-                if (respuesta.Succeeded == false)
+                if (respuesta.Succeeded)
                 {
-                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    UsuariosHelper.CreateUserAsp(cliente.UserName, "Cliente");
                     return RedirectToAction("Index");
                 }
-                UsuariosHelper.CreateUserAsp(cliente.UserName, "Cliente");
-                return RedirectToAction("Index");
+                ModelState.AddModelError(string.Empty, respuesta.Message);
             }
-
+            
             ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre", cliente.CiudadID);
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre", cliente.DepartamentoID);
             return View(cliente);
@@ -104,12 +103,11 @@ namespace ECommerce.Controllers
             {
                 db.Entry(cliente).State = EntityState.Modified;
                 var respuesta = DbHelper.Guardar(db);
-                if (respuesta.Succeeded == false)
+                if (respuesta.Succeeded)
                 {
-                    ModelState.AddModelError(string.Empty, respuesta.Message);
                     return RedirectToAction("Index");
                 }
-                return RedirectToAction("Index");
+                ModelState.AddModelError(string.Empty, respuesta.Message);
             }
             ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(cliente.DepartamentoID), "CiudadID", "Nombre", cliente.CiudadID);
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre", cliente.DepartamentoID);
@@ -136,17 +134,16 @@ namespace ECommerce.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Cliente cliente = db.Clientes.Find(id);
+            var cliente = db.Clientes.Find(id);
             db.Clientes.Remove(cliente);
             var respuesta = DbHelper.Guardar(db);
-            if (respuesta.Succeeded == false)
+            if (respuesta.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, respuesta.Message);
+                UsuariosHelper.DeleteUser(cliente.UserName, "Cliente");
                 return RedirectToAction("Index");
             }
-
-            UsuariosHelper.DeleteUser(cliente.UserName);
-            return RedirectToAction("Index");
+            ModelState.AddModelError(string.Empty, respuesta.Message);
+            return View(cliente);
         }
 
         protected override void Dispose(bool disposing)

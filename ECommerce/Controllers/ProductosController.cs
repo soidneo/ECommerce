@@ -71,7 +71,10 @@ namespace ECommerce.Controllers
                 if (respuesta.Succeeded == false)
                 {
                     ModelState.AddModelError(string.Empty, respuesta.Message);
-                    return RedirectToAction("Index");
+                    var user2 = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+                    ViewBag.CategoriaID = new SelectList(CombosHelper.GetCategorias(user2.EmpresaID), "CategoriaID", "Descripcion", producto.CategoriaID);
+                    ViewBag.ImpuestoID = new SelectList(CombosHelper.GetImpuestos(user2.EmpresaID), "ImpuestoID", "Descripcion", producto.ImpuestoID);
+                    return View(producto);
                 }
                 if (producto.ImageFile != null)
                 {
@@ -89,7 +92,10 @@ namespace ECommerce.Controllers
                         if (respuesta.Succeeded == false)
                         {
                             ModelState.AddModelError(string.Empty, respuesta.Message);
-                            return RedirectToAction("Index");
+                            var user2 = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+                            ViewBag.CategoriaID = new SelectList(CombosHelper.GetCategorias(user2.EmpresaID), "CategoriaID", "Descripcion", producto.CategoriaID);
+                            ViewBag.ImpuestoID = new SelectList(CombosHelper.GetImpuestos(user2.EmpresaID), "ImpuestoID", "Descripcion", producto.ImpuestoID);
+                            return View(producto);
                         }
 
                     }
@@ -129,6 +135,7 @@ namespace ECommerce.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Producto producto)
         {
+            var respuesta = new Respuesta();
             if (ModelState.IsValid)
             {
                 if (producto.ImageFile != null)
@@ -142,15 +149,13 @@ namespace ECommerce.Controllers
 
                 }
                 db.Entry(producto).State = EntityState.Modified;
-                var respuesta = DbHelper.Guardar(db);
-                if (respuesta.Succeeded == false)
+                respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded)
                 {
-                    ModelState.AddModelError(string.Empty, respuesta.Message);
                     return RedirectToAction("Index");
                 }
-
-                return RedirectToAction("Index");
             }
+            ModelState.AddModelError(string.Empty, respuesta.Message);
             ViewBag.CategoriaID = new SelectList(CombosHelper.GetCategorias(producto.EmpresaID), "CategoriaID", "Descripcion", producto.CategoriaID);
             ViewBag.ImpuestoID = new SelectList(CombosHelper.GetImpuestos(producto.EmpresaID), "ImpuestoID", "Descripcion", producto.ImpuestoID);
             return View(producto);
@@ -182,7 +187,7 @@ namespace ECommerce.Controllers
             if (respuesta.Succeeded == false)
             {
                 ModelState.AddModelError(string.Empty, respuesta.Message);
-                return RedirectToAction("Index");
+                return View(producto);
             }
 
             return RedirectToAction("Index");

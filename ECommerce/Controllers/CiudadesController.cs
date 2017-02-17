@@ -57,13 +57,11 @@ namespace ECommerce.Controllers
             {
                 db.Ciudads.Add(ciudad);
                 var respuesta = DbHelper.Guardar(db);
-                if (respuesta.Succeeded == false)
+                if (respuesta.Succeeded)
                 {
-                    ModelState.AddModelError(string.Empty, respuesta.Message);
                     return RedirectToAction("Index");
                 }
-
-                return RedirectToAction("Index");
+                ModelState.AddModelError(string.Empty, respuesta.Message);
             }
 
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
@@ -98,13 +96,11 @@ namespace ECommerce.Controllers
             {
                 db.Entry(ciudad).State = EntityState.Modified;
                 var respuesta = DbHelper.Guardar(db);
-                if (respuesta.Succeeded == false)
+                if (respuesta.Succeeded)
                 {
-                    ModelState.AddModelError(string.Empty, respuesta.Message);
                     return RedirectToAction("Index");
                 }
-
-                return RedirectToAction("Index");
+                ModelState.AddModelError(string.Empty, respuesta.Message);
             }
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
                 "DepartamentoID", "Nombre");
@@ -133,13 +129,12 @@ namespace ECommerce.Controllers
             Ciudad ciudad = db.Ciudads.Find(id);
             db.Ciudads.Remove(ciudad);
             var respuesta = DbHelper.Guardar(db);
-            if (respuesta.Succeeded == false)
+            if (respuesta.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, respuesta.Message);
                 return RedirectToAction("Index");
             }
-
-            return RedirectToAction("Index");
+            ModelState.AddModelError(string.Empty, respuesta.Message);
+            return View(ciudad);
         }
 
         protected override void Dispose(bool disposing)

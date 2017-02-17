@@ -19,7 +19,7 @@ namespace ECommerce.Controllers
         public ActionResult AddProducto()
         {
             var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-            ViewBag.ProductoID = new SelectList(CombosHelper.getProductos(user.EmpresaID), "ProductoID", "Descripcion");
+            ViewBag.ProductoID = new SelectList(CombosHelper.getProductos(user.EmpresaID,false), "ProductoID", "Descripcion");
             return PartialView();
         }
 
@@ -172,13 +172,11 @@ namespace ECommerce.Controllers
             {
                 db.Entry(venta).State = EntityState.Modified;
                 var respuesta = DbHelper.Guardar(db);
-                if (respuesta.Succeeded == false)
+                if (respuesta.Succeeded)
                 {
-                    ModelState.AddModelError(string.Empty, respuesta.Message);
                     return RedirectToAction("Index");
                 }
-
-                return RedirectToAction("Index");
+                ModelState.AddModelError(string.Empty, respuesta.Message);
             }
             ViewBag.ClienteID = new SelectList(db.Clientes, "ClienteID", "UserName", venta.ClienteID);
             ViewBag.EmpresaID = new SelectList(db.Empresas, "EmpresaID", "Nombre", venta.EmpresaID);
@@ -206,15 +204,15 @@ namespace ECommerce.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Venta venta = db.Ventas.Find(id);
+            var venta = db.Ventas.Find(id);
             db.Ventas.Remove(venta);
             var respuesta = DbHelper.Guardar(db);
-            if (respuesta.Succeeded == false)
+            if (respuesta.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, respuesta.Message);
                 return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            ModelState.AddModelError(string.Empty, respuesta.Message);
+            return View(venta);
         }
 
         protected override void Dispose(bool disposing)

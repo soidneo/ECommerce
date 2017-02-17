@@ -10,7 +10,7 @@ namespace ECommerce.Models
     {
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [Range(1, double.MaxValue, ErrorMessage = "Debe seleccionar un {0}")]
-        [Display(Name = "Producto")]
+        [Display(Name = "Product", Prompt = "[Select a product...]")]
         public int ProductoID { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]

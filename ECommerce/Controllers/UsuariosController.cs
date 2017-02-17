@@ -61,7 +61,6 @@ namespace ECommerce.Controllers
                 var respuesta = DbHelper.Guardar(db);
                 if (respuesta.Succeeded)
                 {
-
                     UsuariosHelper.CreateUserAsp(usuario.UserName, "User");
                     if (usuario.PhotoFile != null)
                     {
@@ -78,16 +77,17 @@ namespace ECommerce.Controllers
                             if (respuesta.Succeeded == false)
                             {
                                 ModelState.AddModelError(string.Empty, respuesta.Message);
-                                return RedirectToAction("Index");
+                                ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre", usuario.CiudadID);
+                                ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre", usuario.DepartamentoID);
+                                ViewBag.EmpresaID = new SelectList(CombosHelper.GetEmpresas(), "EmpresaID", "Nombre", usuario.EmpresaID);
+                                return View(usuario);
                             }
                         }
                     }
                     return RedirectToAction("Index");
                 }
                 ModelState.AddModelError(string.Empty, respuesta.Message);
-                return RedirectToAction("Index");
             }
-
             ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre", usuario.CiudadID);
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre", usuario.DepartamentoID);
             ViewBag.EmpresaID = new SelectList(CombosHelper.GetEmpresas(), "EmpresaID", "Nombre", usuario.EmpresaID);
@@ -129,7 +129,6 @@ namespace ECommerce.Controllers
                     {
                         usuario.Photo = string.Format("{0}/{1}", folder, fileName);
                     }
-
                 }
                 var db2 = new ECommerceContext();
                 var currentUser = db2.Usuarios.Find(usuario.UsuarioID);
@@ -139,15 +138,12 @@ namespace ECommerce.Controllers
                 }
                 db.Entry(usuario).State = EntityState.Modified;
                 var respuesta = DbHelper.Guardar(db);
-                if (respuesta.Succeeded == false)
+                if (respuesta.Succeeded)
                 {
-                    ModelState.AddModelError(string.Empty, respuesta.Message);
+                    db2.Dispose();
                     return RedirectToAction("Index");
                 }
-
-                db2.Dispose();
-
-                return RedirectToAction("Index");
+                ModelState.AddModelError(string.Empty, respuesta.Message);
             }
             ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(usuario.DepartamentoID), "CiudadID", "Nombre", usuario.CiudadID);
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre", usuario.DepartamentoID);
@@ -178,14 +174,13 @@ namespace ECommerce.Controllers
             var usuario = db.Usuarios.Find(id);
             db.Usuarios.Remove(usuario);
             var respuesta = DbHelper.Guardar(db);
-            if (respuesta.Succeeded == false)
+            if (respuesta.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, respuesta.Message);
+                UsuariosHelper.DeleteUser(usuario.UserName,"User");
                 return RedirectToAction("Index");
             }
-
-            UsuariosHelper.DeleteUser(usuario.UserName);
-            return RedirectToAction("Index");
+            ModelState.AddModelError(string.Empty, respuesta.Message);
+            return View(usuario);
         }
 
         protected override void Dispose(bool disposing)

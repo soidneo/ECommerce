@@ -25,7 +25,7 @@ namespace ECommerce.Clases
             }
         }
 
-        public static bool DeleteUser(string email)
+        public static bool DeleteUser(string email, string roleName)
         {
             var userManager = new UserManager<ApplicationUser>(
                 new UserStore<ApplicationUser>(usuarioContext));
@@ -34,7 +34,7 @@ namespace ECommerce.Clases
             {
                 return false;
             }
-            var response = userManager.Delete(userASP);
+            var response = userManager.RemoveFromRole(userASP.Id,roleName);
             return response.Succeeded;
         }
 
@@ -72,12 +72,16 @@ namespace ECommerce.Clases
         {
             var userManager = new UserManager<ApplicationUser>(
                 new UserStore<ApplicationUser>(usuarioContext));
-            var userASP = new ApplicationUser
+            var userASP = userManager.FindByEmail(email);
+            if (userASP == null)
             {
-                UserName = email,
-                Email = email,
-            };
-            userManager.Create(userASP, email);
+                userASP = new ApplicationUser
+                {
+                    UserName = email,
+                    Email = email,
+                };
+                userManager.Create(userASP, email);
+            }
             userManager.AddToRole(userASP.Id, roleName);
         }
 

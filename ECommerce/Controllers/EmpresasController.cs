@@ -60,7 +60,10 @@ namespace ECommerce.Controllers
                 if (respuesta.Succeeded == false)
                 {
                     ModelState.AddModelError(string.Empty, respuesta.Message);
-                    return RedirectToAction("Index");
+                    ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre");
+                    ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
+                        "DepartamentoID", "Nombre");
+                    return View(empresa);
                 }
                 if (empresa.LogoFile != null)
                 {
@@ -78,17 +81,15 @@ namespace ECommerce.Controllers
                         if (respuesta.Succeeded == false)
                         {
                             ModelState.AddModelError(string.Empty, respuesta.Message);
-                            return RedirectToAction("Index");
+                            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre");
+                            ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
+                                "DepartamentoID", "Nombre");
+                            return View(empresa);
                         }
-
                     }
-
                 }
-                
-                
                 return RedirectToAction("Index");
             }
-
             ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre");
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
                 "DepartamentoID", "Nombre");
@@ -137,7 +138,10 @@ namespace ECommerce.Controllers
                 if (respuesta.Succeeded == false)
                 {
                     ModelState.AddModelError(string.Empty, respuesta.Message);
-                    return RedirectToAction("Index");
+                    ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre");
+                    ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(),
+                        "DepartamentoID", "Nombre");
+                    return View(empresa);
                 }
                 return RedirectToAction("Index");
             }
@@ -170,12 +174,12 @@ namespace ECommerce.Controllers
             Empresa empresa = db.Empresas.Find(id);
             db.Empresas.Remove(empresa);
             var respuesta = DbHelper.Guardar(db);
-            if (respuesta.Succeeded == false)
+            if (respuesta.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, respuesta.Message);
                 return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            ModelState.AddModelError(string.Empty, respuesta.Message);
+            return View(empresa);
         }
 
        

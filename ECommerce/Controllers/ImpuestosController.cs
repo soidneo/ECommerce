@@ -66,12 +66,11 @@ namespace ECommerce.Controllers
             {
                 db.Impuestoes.Add(impuesto);
                 var respuesta = DbHelper.Guardar(db);
-                if (respuesta.Succeeded == false)
+                if (respuesta.Succeeded)
                 {
-                    ModelState.AddModelError(string.Empty, respuesta.Message);
                     return RedirectToAction("Index");
                 }
-                return RedirectToAction("Index");
+                ModelState.AddModelError(string.Empty, respuesta.Message);
             }
             return View(impuesto);
         }
@@ -102,13 +101,11 @@ namespace ECommerce.Controllers
             {
                 db.Entry(impuesto).State = EntityState.Modified;
                 var respuesta = DbHelper.Guardar(db);
-                if (respuesta.Succeeded == false)
+                if (respuesta.Succeeded)
                 {
-                    ModelState.AddModelError(string.Empty, respuesta.Message);
                     return RedirectToAction("Index");
                 }
-
-                return RedirectToAction("Index");
+                ModelState.AddModelError(string.Empty, respuesta.Message);
             }
             return View(impuesto);
         }
@@ -136,12 +133,12 @@ namespace ECommerce.Controllers
             Impuesto impuesto = db.Impuestoes.Find(id);
             db.Impuestoes.Remove(impuesto);
             var respuesta = DbHelper.Guardar(db);
-            if (respuesta.Succeeded == false)
+            if (respuesta.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, respuesta.Message);
                 return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            ModelState.AddModelError(string.Empty, respuesta.Message);
+            return View(impuesto);
         }
 
         protected override void Dispose(bool disposing)

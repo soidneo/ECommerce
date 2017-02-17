@@ -9,6 +9,8 @@
 <p>
     @Html.ActionLink("Nuevo Producto", "Create")
 </p>
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <table class="table">
     <tr>
         <th>
