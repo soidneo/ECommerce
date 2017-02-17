@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using ECommerce.Models;
 using ECommerce.Clases;
+using PagedList;
 
 namespace ECommerce.Controllers
 {
@@ -85,11 +86,16 @@ namespace ECommerce.Controllers
             return RedirectToAction("Create");
         }
         // GET: Ventas
-        public ActionResult Index()
+        public ActionResult Index(int? page = null)
         {
+            page = (page ?? 1);
             var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-            var ventas = db.Ventas.Where(v => v.EmpresaID == user.EmpresaID).Include(v => v.Cliente).Include(v => v.Estado);
-            return View(ventas.ToList());
+            var ventas = db.Ventas.Where(v => v.EmpresaID == user.EmpresaID)
+                .Include(v => v.Cliente)
+                .Include(v => v.Estado)
+                .OrderBy(v => v.Fecha)
+                .ThenBy(v => v.Estado);
+            return View(ventas.ToPagedList((int)page,5));
         }
 
         // GET: Ventas/Details/5

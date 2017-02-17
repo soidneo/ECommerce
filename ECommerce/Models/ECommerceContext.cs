@@ -45,5 +45,7 @@ namespace ECommerce.Models
         public System.Data.Entity.DbSet<ECommerce.Models.VentaDetalle> VentaDetalles { get; set; }
 
         public System.Data.Entity.DbSet<ECommerce.Models.VentaDetalleTmp> VentaDetalleTmps { get; set; }
+
+        public System.Data.Entity.DbSet<ECommerce.Models.EmpresaCliente> EmpresaClientes { get; set; }
     }
 }

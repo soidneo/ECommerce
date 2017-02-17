@@ -10,19 +10,13 @@ namespace ECommerce.Models
     public class Cliente
     {
         [Key]
-        [Display(Name = "CLiente")]
+        [Display(Name = "Cliente")]
         public int ClienteID { get; set; }
-
-        [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [Range(1, double.MaxValue, ErrorMessage = "Debe seleccionar una {0}")]
-        [Display(Name = "Empresa")]
-        public int EmpresaID { get; set; }
 
         [Display(Name = "Correo E")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [StringLength(256, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
         [DataType(DataType.EmailAddress)]
-        [Index("Cliente_UserName_Index", IsUnique = true)]
         public string UserName { get; set; }
 
         [Display(Name = "Nombres")]
@@ -62,7 +56,7 @@ namespace ECommerce.Models
 
         public virtual Departamento Departamento { get; set; }
         public virtual Ciudad Ciudad { get; set; }
-        public virtual Empresa Empresa { get; set; }
         public virtual ICollection<Venta> Ventas { get; set; }
+        public virtual ICollection<EmpresaCliente> EmpresaClientes { get; set; }
     }
 }

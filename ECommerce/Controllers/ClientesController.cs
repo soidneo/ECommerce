@@ -19,11 +19,17 @@ namespace ECommerce.Controllers
         public ActionResult Index()
         {
             var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-
-            var clientes = db.Clientes.Where(c => c.EmpresaID == user.EmpresaID)
-                .Include(c => c.Ciudad)
-                .Include(c => c.Departamento);
-            return View(clientes.ToList());
+            var qry = (from cl in db.Clientes
+                       join ec in db.EmpresaClientes on cl.ClienteID equals ec.ClienteID
+                       join em in db.Empresas on ec.EmpresaID equals em.EmpresaID
+                       where em.EmpresaID == user.EmpresaID
+                       select new { cl }).ToList();
+            var clientes = new List<Cliente>();
+            foreach (var item in qry)
+            {
+                clientes.Add(item.cl);
+            }
+            return View(clientes);
         }
 
         // GET: Clientes/Details/5
@@ -46,9 +52,7 @@ namespace ECommerce.Controllers
         {
             ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre");
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre");
-            var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-            var cliente = new Cliente { EmpresaID = user.EmpresaID, };
-            return View(cliente);
+            return View();
         }
 
         // POST: Clientes/Create
@@ -60,16 +64,40 @@ namespace ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Clientes.Add(cliente);
-                var respuesta = DbHelper.Guardar(db);
-                if (respuesta.Succeeded)
+                using (var transaction = db.Database.BeginTransaction())
                 {
-                    UsuariosHelper.CreateUserAsp(cliente.UserName, "Cliente");
-                    return RedirectToAction("Index");
+                    try
+                    {
+                        db.Clientes.Add(cliente);
+                        var respuesta = DbHelper.Guardar(db);
+                        if (!respuesta.Succeeded)
+                        {
+                            ModelState.AddModelError(string.Empty, respuesta.Message);
+                            ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre", cliente.CiudadID);
+                            ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre", cliente.DepartamentoID);
+                            return View(cliente);
+
+                        }
+                        UsuariosHelper.CreateUserAsp(cliente.UserName, "Cliente");
+                        var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+                        var empresaCliente = new EmpresaCliente
+                        {
+                            EmpresaID = user.EmpresaID,
+                            ClienteID = cliente.ClienteID,
+                        };
+                        db.EmpresaClientes.Add(empresaCliente);
+                        db.SaveChanges();
+                        transaction.Commit();
+                        return RedirectToAction("Index");
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
                 }
-                ModelState.AddModelError(string.Empty, respuesta.Message);
             }
-            
+
             ViewBag.CiudadID = new SelectList(CombosHelper.GetCiudades(0), "CiudadID", "Nombre", cliente.CiudadID);
             ViewBag.DepartamentoID = new SelectList(CombosHelper.GetDepartamentos(), "DepartamentoID", "Nombre", cliente.DepartamentoID);
             return View(cliente);
@@ -135,24 +163,31 @@ namespace ECommerce.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             var cliente = db.Clientes.Find(id);
-            db.Clientes.Remove(cliente);
-            var respuesta = DbHelper.Guardar(db);
-            if (respuesta.Succeeded)
+            var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            var empresaCliente = db.EmpresaClientes.Where(ec => ec.EmpresaID == user.EmpresaID &&
+            ec.ClienteID == cliente.ClienteID).FirstOrDefault();
+            db.EmpresaClientes.Remove(empresaCliente);
+            using (var transaction = db.Database.BeginTransaction())
             {
-                UsuariosHelper.DeleteUser(cliente.UserName, "Cliente");
-                return RedirectToAction("Index");
+                var respuesta = DbHelper.Guardar(db);
+                if (respuesta.Succeeded)
+                {
+                    transaction.Commit();
+                    return RedirectToAction("Index");
+                }
+                transaction.Rollback();
+                ModelState.AddModelError(string.Empty, respuesta.Message);
+                return View(cliente);
             }
-            ModelState.AddModelError(string.Empty, respuesta.Message);
-            return View(cliente);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            db.Dispose();
+        }
+        base.Dispose(disposing);
+    }
+}
 }
