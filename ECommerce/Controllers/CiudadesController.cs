@@ -20,8 +20,8 @@ namespace ECommerce.Controllers
         
         public ActionResult Index()
         {
-            var ciudads = db.Ciudads.Include(c => c.Departamento);
-            return View(ciudads.ToList());
+            var Ciudades = db.Ciudades.Include(c => c.Departamento);
+            return View(Ciudades.ToList());
         }
 
         // GET: Ciudades/Details/5
@@ -31,7 +31,7 @@ namespace ECommerce.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ciudad ciudad = db.Ciudads.Find(id);
+            Ciudad ciudad = db.Ciudades.Find(id);
             if (ciudad == null)
             {
                 return HttpNotFound();
@@ -55,7 +55,7 @@ namespace ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Ciudads.Add(ciudad);
+                db.Ciudades.Add(ciudad);
                 var respuesta = DbHelper.Guardar(db);
                 if (respuesta.Succeeded)
                 {
@@ -75,7 +75,7 @@ namespace ECommerce.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ciudad ciudad = db.Ciudads.Find(id);
+            Ciudad ciudad = db.Ciudades.Find(id);
             if (ciudad == null)
             {
                 return HttpNotFound();
@@ -113,7 +113,7 @@ namespace ECommerce.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ciudad ciudad = db.Ciudads.Find(id);
+            Ciudad ciudad = db.Ciudades.Find(id);
             if (ciudad == null)
             {
                 return HttpNotFound();
@@ -126,8 +126,8 @@ namespace ECommerce.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Ciudad ciudad = db.Ciudads.Find(id);
-            db.Ciudads.Remove(ciudad);
+            Ciudad ciudad = db.Ciudades.Find(id);
+            db.Ciudades.Remove(ciudad);
             var respuesta = DbHelper.Guardar(db);
             if (respuesta.Succeeded)
             {

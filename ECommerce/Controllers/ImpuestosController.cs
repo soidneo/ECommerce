@@ -16,7 +16,7 @@ namespace ECommerce.Controllers
     {
         private ECommerceContext db = new ECommerceContext();
 
-        // GET: Impuestoes
+        // GET: Impuestos
         public ActionResult Index()
         {
             var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
@@ -24,18 +24,18 @@ namespace ECommerce.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            var impuestos = db.Impuestoes.Where(t => t.EmpresaID == user.EmpresaID);
+            var impuestos = db.Impuestos.Where(t => t.EmpresaID == user.EmpresaID);
             return View(impuestos.ToList());
         }
 
-        // GET: Impuestoes/Details/5
+        // GET: Impuestos/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Impuesto impuesto = db.Impuestoes.Find(id);
+            Impuesto impuesto = db.Impuestos.Find(id);
             if (impuesto == null)
             {
                 return HttpNotFound();
@@ -43,7 +43,7 @@ namespace ECommerce.Controllers
             return View(impuesto);
         }
 
-        // GET: Impuestoes/Create
+        // GET: Impuestos/Create
         public ActionResult Create()
         {
             var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
@@ -55,7 +55,7 @@ namespace ECommerce.Controllers
             return View(impuesto);  
         }
 
-        // POST: Impuestoes/Create
+        // POST: Impuestos/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -64,7 +64,7 @@ namespace ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Impuestoes.Add(impuesto);
+                db.Impuestos.Add(impuesto);
                 var respuesta = DbHelper.Guardar(db);
                 if (respuesta.Succeeded)
                 {
@@ -75,14 +75,14 @@ namespace ECommerce.Controllers
             return View(impuesto);
         }
 
-        // GET: Impuestoes/Edit/5
+        // GET: Impuestos/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Impuesto impuesto = db.Impuestoes.Find(id);
+            Impuesto impuesto = db.Impuestos.Find(id);
             if (impuesto == null)
             {
                 return HttpNotFound();
@@ -90,7 +90,7 @@ namespace ECommerce.Controllers
             return View(impuesto);
         }
 
-        // POST: Impuestoes/Edit/5
+        // POST: Impuestos/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -110,14 +110,14 @@ namespace ECommerce.Controllers
             return View(impuesto);
         }
 
-        // GET: Impuestoes/Delete/5
+        // GET: Impuestos/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Impuesto impuesto = db.Impuestoes.Find(id);
+            Impuesto impuesto = db.Impuestos.Find(id);
             if (impuesto == null)
             {
                 return HttpNotFound();
@@ -125,13 +125,13 @@ namespace ECommerce.Controllers
             return View(impuesto);
         }
 
-        // POST: Impuestoes/Delete/5
+        // POST: Impuestos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Impuesto impuesto = db.Impuestoes.Find(id);
-            db.Impuestoes.Remove(impuesto);
+            Impuesto impuesto = db.Impuestos.Find(id);
+            db.Impuestos.Remove(impuesto);
             var respuesta = DbHelper.Guardar(db);
             if (respuesta.Succeeded)
             {

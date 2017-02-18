@@ -22,7 +22,7 @@ namespace ECommerce.Models
 
         [Display(Name = "Producto")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [StringLength(30, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
+        [StringLength(256, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
         [Index("Producto_EmpresaID_Descripcion_Index", 2, IsUnique = true)]
         public string Descripcion { get; set; }
 
@@ -43,6 +43,14 @@ namespace ECommerce.Models
         public int ImpuestoID { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
+        [Range(1, double.MaxValue, ErrorMessage = "Debe seleccionar una {0}")]
+        [Display(Name = "Unidad")]
+        public int UnidadID { get; set; }
+
+        [Display(Name = "Categoria")]
+        public int? RecetaID { get; set; }
+
+        [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         [Range(0, double.MaxValue, ErrorMessage = "Debe seleccionar una {0} entre {1} y {2}")]
         public decimal Precio { get; set; }
@@ -61,8 +69,12 @@ namespace ECommerce.Models
 
         public virtual Empresa Empresa { get; set; }
         public virtual Categoria Categoria { get; set; }
+        public virtual Unidad Unidad { get; set; }
         public virtual Impuesto Impuesto { get; set; }
+        public virtual Receta Receta { get; set; }
         public virtual ICollection<Inventario> Inventarios { get; set; }
+        public virtual ICollection<RecetaDetalle> RecetaDetalles { get; set; }
+        public virtual ICollection<RecetaDetalleTmp> RecetaDetalleTmps { get; set; }
         public virtual ICollection<VentaDetalle> VentaDetalles { get; set; }
         public virtual ICollection<VentaDetalleTmp> VentaDetalleTmps { get; set; }
     }

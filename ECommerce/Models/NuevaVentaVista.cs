@@ -23,7 +23,7 @@ namespace ECommerce.Models
         [DataType(DataType.MultilineText)]
         public string Comentarios { get; set; }
 
-        public List<VentaDetallesTmp> Detalles { get; set; }
+        public List<VentaDetalleTmp> Detalles { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = false)]
         public double TotalCantidad { get { return Detalles == null ? 0 : Detalles.Sum(d => d.Cantidad); } }

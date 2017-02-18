@@ -20,8 +20,9 @@ namespace ECommerce.Models
         public int EmpresaID { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [StringLength(50, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
+        [StringLength(256, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
         [Index("Bodega_EmpresaID_Nombre_Index", 2,IsUnique = true)]
+        [Display(Name = "Bodega")]
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
@@ -31,7 +32,7 @@ namespace ECommerce.Models
 
         [Display(Name = "Dirección")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [StringLength(100, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
+        [StringLength(256, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
         public string Direccion { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]

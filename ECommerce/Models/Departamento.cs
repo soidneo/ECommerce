@@ -15,7 +15,7 @@ namespace ECommerce.Models
 
         [Display(Name ="Departamento")]
         [Required(ErrorMessage ="El campo {0} es obligatorio")]
-        [StringLength(30, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
+        [StringLength(256, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
         [Index("Departamento_Nombre_Index", IsUnique = true)]
         public string Nombre { get; set; }
 

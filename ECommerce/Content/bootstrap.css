@@ -6885,3 +6885,7 @@ td.visible-print {
     border: 2px dashed #999 !important;
     background-color: #f0f0f0;
 }
+
+.glyphicon {
+    font-size: 15px;
+}

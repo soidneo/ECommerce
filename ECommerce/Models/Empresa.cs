@@ -14,9 +14,9 @@ namespace ECommerce.Models
         [Key]
         public int EmpresaID { get; set; }
 
-        [Display(Name = "Nombre Empresa")]
+        [Display(Name = "Empresa")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [StringLength(50, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
+        [StringLength(256, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
         [Index("Empresa_Nombre_Index", IsUnique = true)]
         public string Nombre { get; set; }
 
@@ -27,7 +27,7 @@ namespace ECommerce.Models
 
         [Display(Name = "Dirección")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [StringLength(100, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
+        [StringLength(256, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
         public string Direccion { get; set; }
 
         [DataType(DataType.ImageUrl)]
@@ -48,6 +48,8 @@ namespace ECommerce.Models
         public virtual Ciudad Ciudad { get; set; }
         public virtual ICollection<Usuario> Usuarios { get; set; }
         public virtual ICollection<Categoria> Categorias { get; set; }
+        public virtual ICollection<Unidad> Unidades { get; set; }
+        public virtual ICollection<Receta> Recetas { get; set; }
         public virtual ICollection<Impuesto> Impuestos { get; set; }
         public virtual ICollection<Producto> Productos { get; set; }
         public virtual ICollection<Bodega> Bodegas { get; set; }

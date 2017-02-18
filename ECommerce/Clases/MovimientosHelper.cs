@@ -61,5 +61,46 @@ namespace ECommerce.Clases
                 }
             }
         }
+
+        public static Respuesta NuevaReceta(NuevaRecetaVista vista, string userName)
+        {
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var user = db.Usuarios.Where(u => u.UserName == userName).FirstOrDefault();
+                    var receta = new Receta
+                    {
+                        EmpresaID = user.EmpresaID,
+                        Descripcion = vista.Descripcion,
+                        Comentarios = vista.Comentarios,
+                    };
+                    db.Recetas.Add(receta);
+                    db.SaveChanges();
+
+                    var detalles = db.RecetaDetalleTmps.Where(v => v.UserName == userName).ToList();
+                    foreach (var detalle in detalles)
+                    {
+                        var recetaDetalles = new RecetaDetalle
+                        {
+                            RecetaID = receta.RecetaID,
+                            ProductoID = detalle.ProductoID,
+                            Cantidad = detalle.Cantidad,
+                            Precio = detalle.Precio,
+                        };
+                        db.RecetaDetalles.Add(recetaDetalles);
+                        db.RecetaDetalleTmps.Remove(detalle);
+                    }
+                    db.SaveChanges();
+                    transaction.Commit();
+                    return new Respuesta { Succeeded = true, };
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return new Respuesta { Succeeded = false, Message = ex.Message, };
+                }
+            }
+        }
     }
 }

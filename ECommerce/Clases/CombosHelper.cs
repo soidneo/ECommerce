@@ -24,7 +24,7 @@ namespace ECommerce.Clases
         }
         public static List<Ciudad> GetCiudades(int id)
         {
-            var ciudades = db.Ciudads.Where(c => c.DepartamentoID == id).ToList();
+            var ciudades = db.Ciudades.Where(c => c.DepartamentoID == id).ToList();
             ciudades.Add(new Ciudad
             {
                 CiudadID = 0,
@@ -77,7 +77,7 @@ namespace ECommerce.Clases
 
         public static List<Impuesto> GetImpuestos(int EmpresaID)
         {
-            var impuestos = db.Impuestoes.Where(i => i.EmpresaID == EmpresaID).ToList();
+            var impuestos = db.Impuestos.Where(i => i.EmpresaID == EmpresaID).ToList();
             impuestos.Add(new Impuesto
             {
                 ImpuestoID = 0,
@@ -85,10 +85,31 @@ namespace ECommerce.Clases
             });
             return impuestos.OrderBy(i => i.Descripcion).ToList();
         }
+        public static List<Unidad> GetUnidades(int EmpresaID)
+        {
+            var unidades = db.Unidades.Where(u => u.EmpresaID == EmpresaID).ToList();
+            unidades.Add(new Unidad
+            {
+                UnidadID = 0,
+                Descripcion = "[Seleccione una unidad...]"
+            });
+            return unidades.OrderBy(u => u.Descripcion).ToList();
+        }
+
+        public static List<Receta> GetRecetas(int EmpresaID)
+        {
+            var recetas = db.Recetas.Where(r => r.EmpresaID == EmpresaID).ToList();
+            recetas.Add(new Receta
+            {
+                RecetaID = 0,
+                Descripcion = "[Seleccione una receta...]"
+            });
+            return recetas.OrderBy(r => r.Descripcion).ToList();
+        }
 
         public static List<Producto> getProductos(int empresaID)
         {
-            var productos = db.Productoes.Where(i => i.EmpresaID == empresaID).ToList();
+            var productos = db.Productos.Where(i => i.EmpresaID == empresaID).ToList();
             productos.Add(new Producto
             {
                 ProductoID = 0,
@@ -98,7 +119,7 @@ namespace ECommerce.Clases
         }
         public static List<Producto> getProductos(int empresaID, bool sw)
         {
-            var productos = db.Productoes.Where(p => p.EmpresaID == empresaID).ToList();
+            var productos = db.Productos.Where(p => p.EmpresaID == empresaID).ToList();
             return productos.OrderBy(p => p.Descripcion).ToList();
         }
 

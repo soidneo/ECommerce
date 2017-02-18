@@ -13,9 +13,9 @@ namespace ECommerce.Models
         [Key]
         public int ImpuestoID { get; set; }
 
-        [Display(Name = "Descripción")]
+        [Display(Name = "Impuesto")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [StringLength(30, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
+        [StringLength(100, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
         [Index("Impuesto_EmpresaID_Descripcion_Index", 2, IsUnique = true)]
         public string Descripcion { get; set; }
 

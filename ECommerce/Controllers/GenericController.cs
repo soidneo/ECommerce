@@ -14,7 +14,7 @@ namespace ECommerce.Controllers
         public JsonResult GetCities(int departamentoId)
         {
             db.Configuration.ProxyCreationEnabled = false;
-            var ciudadesDe = db.Ciudads.Where(c => c.DepartamentoID == departamentoId);
+            var ciudadesDe = db.Ciudades.Where(c => c.DepartamentoID == departamentoId);
             return Json(ciudadesDe);
         }
         protected override void Dispose(bool disposing)

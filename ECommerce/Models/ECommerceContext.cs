@@ -20,32 +20,40 @@ namespace ECommerce.Models
         }
         public DbSet<Departamento> Departamentos { get; set; }
 
-        public System.Data.Entity.DbSet<ECommerce.Models.Ciudad> Ciudads { get; set; }
+        public DbSet<Ciudad> Ciudades { get; set; }
 
-        public System.Data.Entity.DbSet<ECommerce.Models.Empresa> Empresas { get; set; }
+        public DbSet<Empresa> Empresas { get; set; }
 
-        public System.Data.Entity.DbSet<ECommerce.Models.Usuario> Usuarios { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
 
-        public System.Data.Entity.DbSet<ECommerce.Models.Categoria> Categorias { get; set; }
+        public DbSet<Categoria> Categorias { get; set; }
 
-        public System.Data.Entity.DbSet<ECommerce.Models.Impuesto> Impuestoes { get; set; }
+        public DbSet<Impuesto> Impuestos { get; set; }
 
-        public System.Data.Entity.DbSet<ECommerce.Models.Producto> Productoes { get; set; }
+        public DbSet<Producto> Productos { get; set; }
 
-        public System.Data.Entity.DbSet<ECommerce.Models.Bodega> Bodegas { get; set; }
+        public DbSet<Bodega> Bodegas { get; set; }
 
-        public System.Data.Entity.DbSet<ECommerce.Models.Inventario> Inventarios { get; set; }
+        public DbSet<Inventario> Inventarios { get; set; }
 
-        public System.Data.Entity.DbSet<ECommerce.Models.Cliente> Clientes { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
 
-        public System.Data.Entity.DbSet<ECommerce.Models.Estado> Estadoes { get; set; }
+        public DbSet<Estado> Estados { get; set; }
 
-        public System.Data.Entity.DbSet<ECommerce.Models.Venta> Ventas { get; set; }
+        public DbSet<Venta> Ventas { get; set; }
 
-        public System.Data.Entity.DbSet<ECommerce.Models.VentaDetalle> VentaDetalles { get; set; }
+        public DbSet<VentaDetalle> VentaDetalles { get; set; }
 
-        public System.Data.Entity.DbSet<ECommerce.Models.VentaDetalleTmp> VentaDetalleTmps { get; set; }
+        public DbSet<VentaDetalleTmp> VentaDetalleTmps { get; set; }
 
-        public System.Data.Entity.DbSet<ECommerce.Models.EmpresaCliente> EmpresaClientes { get; set; }
+        public DbSet<EmpresaCliente> EmpresaClientes { get; set; }
+
+        public DbSet<Receta> Recetas { get; set; }
+
+        public DbSet<RecetaDetalle> RecetaDetalles { get; set; }
+
+        public DbSet<RecetaDetalleTmp> RecetaDetalleTmps { get; set; }
+
+        public DbSet<Unidad> Unidades { get; set; }
     }
 }

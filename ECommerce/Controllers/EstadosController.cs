@@ -18,7 +18,7 @@ namespace ECommerce.Controllers
         // GET: Estados
         public ActionResult Index()
         {
-            return View(db.Estadoes.ToList());
+            return View(db.Estados.ToList());
         }
 
         // GET: Estados/Details/5
@@ -28,7 +28,7 @@ namespace ECommerce.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Estado estado = db.Estadoes.Find(id);
+            Estado estado = db.Estados.Find(id);
             if (estado == null)
             {
                 return HttpNotFound();
@@ -51,7 +51,7 @@ namespace ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Estadoes.Add(estado);
+                db.Estados.Add(estado);
                 var respuesta = DbHelper.Guardar(db);
                 if (respuesta.Succeeded)
                 {
@@ -69,7 +69,7 @@ namespace ECommerce.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Estado estado = db.Estadoes.Find(id);
+            Estado estado = db.Estados.Find(id);
             if (estado == null)
             {
                 return HttpNotFound();
@@ -104,7 +104,7 @@ namespace ECommerce.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Estado estado = db.Estadoes.Find(id);
+            Estado estado = db.Estados.Find(id);
             if (estado == null)
             {
                 return HttpNotFound();
@@ -117,8 +117,8 @@ namespace ECommerce.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Estado estado = db.Estadoes.Find(id);
-            db.Estadoes.Remove(estado);
+            Estado estado = db.Estados.Find(id);
+            db.Estados.Remove(estado);
             var respuesta = DbHelper.Guardar(db);
             if (respuesta.Succeeded)
             {

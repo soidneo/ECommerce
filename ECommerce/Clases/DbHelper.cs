@@ -53,11 +53,11 @@ namespace ECommerce.Clases
 
         public static int GetEstado(string descripcion, ECommerceContext db)
         {
-            var estado = db.Estadoes.Where(e => e.Descripcion == descripcion).FirstOrDefault();
+            var estado = db.Estados.Where(e => e.Descripcion == descripcion).FirstOrDefault();
             if (estado == null)
             {
                 estado = new Estado { Descripcion = descripcion, };
-                db.Estadoes.Add(estado);
+                db.Estados.Add(estado);
                 db.SaveChanges();
             }
             return estado.EstadoID;

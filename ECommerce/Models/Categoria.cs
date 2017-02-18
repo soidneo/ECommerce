@@ -15,7 +15,7 @@ namespace ECommerce.Models
 
         [Display(Name = "Descripción")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [StringLength(30, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
+        [StringLength(256, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
         [Index("Categoria_EmpresaID_Descripcion_Index", 2, IsUnique = true)]
         public string Descripcion { get; set; }
 

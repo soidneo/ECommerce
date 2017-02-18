@@ -7,7 +7,10 @@
 <h2>Usuarios</h2>
 
 <p>
-    @Html.ActionLink("Nuevo Usuario", "Create",new { },new { @class = "btn btn-primary" })
+    <a href='@Url.Action("Create", "Usuarios", new {})' class="btn btn-primary">
+        Agregar
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    </a>
 </p>
 <table class="table">
     <tr>
@@ -44,7 +47,7 @@
         <td>
             @if (!string.IsNullOrEmpty(item.Photo))
             {
-                <img src="@Url.Content(item.Photo)" alt="Logo" style="width:100px;height:auto;max-width:100%;" />
+                <img src="@Url.Content(item.Photo)" alt="Logo" style="width:60px;height:auto;max-width:100%;" />
             }
         </td>
         <td>
@@ -70,9 +73,15 @@
         </td>
         
         <td>
-            @Html.ActionLink("Editar", "Edit", new { id = item.UsuarioID }, new { @class = "btn btn-warning" })
-            @Html.ActionLink("Detalles", "Details", new { id = item.UsuarioID }, new { @class = "btn btn-info" })
-            @Html.ActionLink("Eliminar", "Delete", new { id = item.UsuarioID }, new { @class = "btn btn-danger" })
+            <a href='@Url.Action("Edit", "Usuarios", new {id = item.UsuarioID})'.replace("ID",id) class="btn btn-warning">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            </a>
+            <a href='@Url.Action("Details", "Usuarios", new {id = item.UsuarioID})' .replace("ID",id) class="btn btn-info">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+            <a href='@Url.Action("Delete", "Usuarios", new {id = item.UsuarioID})' .replace("ID",id) class="btn btn-danger">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </a>
         </td>
     </tr>
 }

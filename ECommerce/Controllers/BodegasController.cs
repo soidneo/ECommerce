@@ -87,7 +87,7 @@ namespace ECommerce.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CiudadID = new SelectList(db.Ciudads, "CiudadID", "Nombre", bodega.CiudadID);
+            ViewBag.CiudadID = new SelectList(db.Ciudades, "CiudadID", "Nombre", bodega.CiudadID);
             ViewBag.DepartamentoID = new SelectList(db.Departamentos, "DepartamentoID", "Nombre", bodega.DepartamentoID);
             return View(bodega);
         }

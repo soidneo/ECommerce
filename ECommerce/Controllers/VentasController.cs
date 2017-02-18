@@ -30,7 +30,7 @@ namespace ECommerce.Controllers
             var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
             if (ModelState.IsValid)
             {
-                var producto = db.Productoes.Find(vista.ProductoID);
+                var producto = db.Productos.Find(vista.ProductoID);
                 var ventaDetallesTmp = db.VentaDetalleTmps.Where(
                     u => u.UserName == User.Identity.Name && u.ProductoID == vista.ProductoID).FirstOrDefault();
                 if (ventaDetallesTmp == null)
@@ -163,7 +163,7 @@ namespace ECommerce.Controllers
             }
             ViewBag.ClienteID = new SelectList(db.Clientes, "ClienteID", "UserName", venta.ClienteID);
             ViewBag.EmpresaID = new SelectList(db.Empresas, "EmpresaID", "Nombre", venta.EmpresaID);
-            ViewBag.EstadoID = new SelectList(db.Estadoes, "EstadoID", "Descripcion", venta.EstadoID);
+            ViewBag.EstadoID = new SelectList(db.Estados, "EstadoID", "Descripcion", venta.EstadoID);
             return View(venta);
         }
 
@@ -186,7 +186,7 @@ namespace ECommerce.Controllers
             }
             ViewBag.ClienteID = new SelectList(db.Clientes, "ClienteID", "UserName", venta.ClienteID);
             ViewBag.EmpresaID = new SelectList(db.Empresas, "EmpresaID", "Nombre", venta.EmpresaID);
-            ViewBag.EstadoID = new SelectList(db.Estadoes, "EstadoID", "Descripcion", venta.EstadoID);
+            ViewBag.EstadoID = new SelectList(db.Estados, "EstadoID", "Descripcion", venta.EstadoID);
             return View(venta);
         }
 
