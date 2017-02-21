@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ECommerce.Models;
+using PagedList;
 
 namespace ECommerce.Controllers
 {
@@ -15,10 +16,11 @@ namespace ECommerce.Controllers
         private ECommerceContext db = new ECommerceContext();
 
         // GET: Unidades
-        public ActionResult Index()
+        public ActionResult Index(int? page = null)
         {
-            var Unidades = db.Unidades.Include(u => u.Empresa);
-            return View(Unidades.ToList());
+            page = (page ?? 1);
+            var Unidades = db.Unidades.Include(u => u.Empresa).OrderBy(u => u.Descripcion);
+            return View(Unidades.ToPagedList((int)page, 5));
         }
 
         // GET: Unidades/Details/5

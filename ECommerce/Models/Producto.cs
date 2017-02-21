@@ -34,20 +34,20 @@ namespace ECommerce.Models
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [Range(1, double.MaxValue, ErrorMessage = "Debe seleccionar una {0}")]
-        [Display(Name = "Categoria")]
+        [Display(Name = "Categoria", Prompt = "[Seleccione una categoria...]")]
         public int CategoriaID { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [Range(1, double.MaxValue, ErrorMessage = "Debe seleccionar una {0}")]
-        [Display(Name = "Categoria")]
+        [Display(Name = "Impuesto", Prompt = "[Seleccione un impuesto...]")]
         public int ImpuestoID { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [Range(1, double.MaxValue, ErrorMessage = "Debe seleccionar una {0}")]
-        [Display(Name = "Unidad")]
+        [Display(Name = "Unidad", Prompt = "[Seleccione una unidad...]")]
         public int UnidadID { get; set; }
 
-        [Display(Name = "Categoria")]
+        [Display(Name = "Categoria", Prompt = "[Seleccione una receta...]")]
         public int? RecetaID { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
@@ -57,6 +57,7 @@ namespace ECommerce.Models
 
         [DataType(DataType.ImageUrl)]
         public string Image { get; set; }
+
         [NotMapped]
         [Display(Name ="Imagen")]
         public HttpPostedFileBase ImageFile { get; set; }
@@ -77,5 +78,7 @@ namespace ECommerce.Models
         public virtual ICollection<RecetaDetalleTmp> RecetaDetalleTmps { get; set; }
         public virtual ICollection<VentaDetalle> VentaDetalles { get; set; }
         public virtual ICollection<VentaDetalleTmp> VentaDetalleTmps { get; set; }
+        public virtual List<CompraDetalle> CompraDetalles { get; set; }
+        public virtual List<CompraDetalleTmp> CompraDetalleTmps { get; set; }
     }
 }

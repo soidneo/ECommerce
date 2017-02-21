@@ -55,5 +55,15 @@ namespace ECommerce.Models
         public DbSet<RecetaDetalleTmp> RecetaDetalleTmps { get; set; }
 
         public DbSet<Unidad> Unidades { get; set; }
+
+        public DbSet<FormaPago> FormaPagos { get; set; }
+
+        public DbSet<ECommerce.Models.Compra> Compras { get; set; }
+
+        public DbSet<ECommerce.Models.CompraDetalle> CompraDetalles { get; set; }
+
+        public DbSet<ECommerce.Models.CompraDetalleTmp> CompraDetalleTmps { get; set; }
+
+        public DbSet<ECommerce.Models.Proveedor> Proveedors { get; set; }
     }
 }

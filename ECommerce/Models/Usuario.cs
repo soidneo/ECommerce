@@ -38,7 +38,7 @@ namespace ECommerce.Models
 
         [Display(Name = "Dirección")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [StringLength(100, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
+        [StringLength(256, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
         public string Direccion { get; set; }
 
         [DataType(DataType.ImageUrl)]

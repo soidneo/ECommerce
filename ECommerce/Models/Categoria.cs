@@ -13,7 +13,7 @@ namespace ECommerce.Models
         [Key]
         public int CategoriaID { get; set; }
 
-        [Display(Name = "Descripción")]
+        [Display(Name = "Categoria")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [StringLength(256, ErrorMessage = "El campo {0} debe tener entre {2} y {1}", MinimumLength = 3)]
         [Index("Categoria_EmpresaID_Descripcion_Index", 2, IsUnique = true)]

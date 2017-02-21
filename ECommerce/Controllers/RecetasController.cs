@@ -132,7 +132,8 @@ namespace ECommerce.Controllers
         public ActionResult AddProducto()
         {
             var user = db.Usuarios.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-            ViewBag.ProductoID = new SelectList(CombosHelper.getProductos(user.EmpresaID, false), "ProductoID", "Descripcion");
+            ViewBag.ProductoID = new SelectList(db.Productos.Where(p => p.EmpresaID == user.EmpresaID &&
+            p.RecetaID == null), "ProductoID", "Descripcion");
             return PartialView();
         }
 

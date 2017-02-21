@@ -54,6 +54,30 @@ namespace ECommerce.Clases
             return clientes.OrderBy(c => c.Nombre).ThenBy(d => d.Apellido).ToList();
         }
 
+        public static List<FormaPago> GetFormaPagos(int EmpresaID)
+        {
+            var formaPagos = db.FormaPagos.Where(fp => fp.EmpresaID == EmpresaID).ToList();
+            formaPagos.Add(new FormaPago 
+            {
+                FormaPagoID = 0,
+                Descripcion = "[Seleccione una Forma de Pago...]"
+            });
+            return formaPagos.OrderBy(i => i.Descripcion).ToList();
+        }
+
+        public static List<Bodega> GetBodegas(int EmpresaID)
+        {
+            var bodegas = db.Bodegas.Where(fp => fp.EmpresaID == EmpresaID).ToList();
+            bodegas.Add(new Bodega
+            {
+                BodegaID = 0,
+                Nombre = "[Seleccione una Forma de Pago...]"
+            });
+            return bodegas.OrderBy(i => i.Nombre).ToList();
+        }
+
+        
+
         public static List<Empresa> GetEmpresas()
         {
             var empresas = db.Empresas.ToList();

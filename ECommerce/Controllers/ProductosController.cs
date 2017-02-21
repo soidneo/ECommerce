@@ -60,7 +60,7 @@ namespace ECommerce.Controllers
             ViewBag.RecetaID = new SelectList(CombosHelper.GetRecetas(user.EmpresaID), "RecetaID", "Descripcion");
             var producto = new Producto
             { EmpresaID = user.EmpresaID, };
-            return View(producto);
+            return PartialView(producto);
         }
 
         // POST: Productos/Create
@@ -121,7 +121,7 @@ namespace ECommerce.Controllers
             ViewBag.CategoriaID = new SelectList(CombosHelper.GetCategorias(user.EmpresaID), "CategoriaID", "Descripcion", producto.CategoriaID);
             ViewBag.ImpuestoID = new SelectList(CombosHelper.GetImpuestos(user.EmpresaID), "ImpuestoID", "Descripcion", producto.ImpuestoID);
             
-            return View(producto);
+            return PartialView(producto);
         }
 
         // GET: Productos/Edit/5

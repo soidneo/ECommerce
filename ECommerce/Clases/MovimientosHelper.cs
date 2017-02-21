@@ -62,6 +62,72 @@ namespace ECommerce.Clases
             }
         }
 
+        public static Respuesta NuevaCompra(NuevaCompraVista vista, string userName)
+        {
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var user = db.Usuarios.Where(u => u.UserName == userName).FirstOrDefault();
+                    var compra = new Compra
+                    {
+                        EmpresaID = user.EmpresaID,
+                        ProveedorID = vista.ProveedorID,
+                        BodegaID = vista.BodegaID,
+                        FormaPagoID = vista.FormaPagoID,
+                        Fecha = vista.Fecha,
+                        Comentarios = vista.Comentarios,
+                        EstadoID = DbHelper.GetEstado("Creada", db),
+                    };
+                    db.Compras.Add(compra);
+                    db.SaveChanges();
+
+                    var detalles = db.CompraDetalleTmps.Where(v => v.UserName == userName).ToList();
+                    foreach (var detalle in detalles)
+                    {
+                        var compraDetalles = new CompraDetalle
+                        {
+                            CompraID = compra.CompraID,
+                            descripcion = detalle.Descripcion,
+                            Precio = detalle.Precio,
+                            ProductoID = detalle.ProductoID,
+                            Cantidad = detalle.Cantidad,
+                            Tasa = detalle.Tasa,
+                        };
+                        db.CompraDetalles.Add(compraDetalles);
+                        db.CompraDetalleTmps.Remove(detalle);
+                    }
+                    db.SaveChanges();
+                    foreach (var detalle in detalles)
+                    {
+                        var invProducto = db.Inventarios
+                            .Where(p => p.ProductoID == detalle.ProductoID 
+                            && p.BodegaID == compra.BodegaID).FirstOrDefault();
+                        double stockActual = 0;
+                        if (invProducto != null)
+                        {
+                            stockActual = invProducto.stock;
+                        }
+                        var inventario = new Inventario
+                        {
+                            BodegaID = compra.BodegaID,
+                            ProductoID = detalle.ProductoID,
+                            stock = stockActual + detalle.Cantidad,
+                     };
+                        db.Inventarios.Add(inventario);
+                    }
+                    db.SaveChanges();
+                    transaction.Commit();
+                    return new Respuesta { Succeeded = true, };
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return new Respuesta { Succeeded = false, Message = ex.Message, };
+                }
+            }
+        }
+
         public static Respuesta NuevaReceta(NuevaRecetaVista vista, string userName)
         {
             using (var transaction = db.Database.BeginTransaction())

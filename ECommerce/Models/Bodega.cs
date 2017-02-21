@@ -49,5 +49,6 @@ namespace ECommerce.Models
         public virtual Ciudad Ciudad { get; set; }
         public virtual Empresa Empresa { get; set; }
         public virtual ICollection<Inventario> Inventarios { get; set; }
+        public virtual List<Compra> Compras { get; set; }
     }
 }
